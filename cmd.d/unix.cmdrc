@@ -7,11 +7,12 @@
 # FILESYSTEM: CONTROL
 # -----------------------------------------------------------------------------
 alias rm="rm --interactive=once --dir --verbose"
+alias rrm="sudo rm -rf"
 alias rmrf="sudo rm -rf"
 alias cp="cp --interactive --preserve --verbose"
 alias cp_new="cp --interactive --preserve --update --verbose"
 alias mv="mv --interactive --verbose"
-alias mv_new="mv --interactive --update --verbose"
+alias mv.new="mv --interactive --update --verbose"
 alias mkdir="mkdir -pv"
 alias chown="chown --preserve-root"
 alias chmod="chmod --preserve-root"
