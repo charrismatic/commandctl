@@ -1,5 +1,5 @@
-commandctl - Linux command alias and function manager
-  
+
+# Commandctl - Linux command alias and function manage  
   
   Command alias and custom function are an overlooked component of the system management in the linux ecosystem. Lack of clear and managed location for these components creates much redundancy and cognitive load when you need to find a very specific command configuration or when youre deciding how and where to save a function that is only mean tot be a test. Often those test scripts become long term tenants in places you wouldn't normally have scripting files at all.
   
