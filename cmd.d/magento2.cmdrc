@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# MAGENTO ALIASES
+alias cache="php -d memory_limit=2048M -f /vagrant/public/bin/magento cache:flush"
+alias cache_off="php -d memory_limit=2048M -f /vagrant/public/bin/magento cache:disable"
+alias cache_on="php -d memory_limit=2048M -f /vagrant/public/bin/magento cache:enable"
+alias composer_install="/usr/local/bin/ea-php70 -d allow_url_fopen=1 /opt/cpanel/composer/bin/composer install"
+alias deploy_content="magento setup:static-content:deploy --refresh-content-version-only"
+alias dump_config="magerun app:config:dump > /vagrant/mount/export/config/.mage_config && \
+  extract /vagrant/public/app/etc/env.php && \
+  extract /vagrant/public/app/etc/config.php;" ;
+alias dump_db='magerun db:dump -vvv --add-time="suffix" --strip="@development" /vagrant/mount/export/db'
+alias dump_media="magerun db:dump --add-time=suffix/vagrant/mount/export/db/mage2_db"
+alias gen="php -d memory_limit=2048M -f /vagrant/public/bin/mg2-codegen.phar"
+alias magento="php -d memory_limit=2048M -f /vagrant/public/bin/magento"
+alias pest="php -d memory_limit=2048M -f /vagrant/public/bin/pestle.phar"
+alias run="php -d memory_limit=2048M /vagrant/public/bin/n98-magerun2.phar --skip-core-commands"
+alias setup_magento="cp /vagrant/mount/magento/* /vagrant/public/ && cp /vagrant/mount/tools/* /vagrant/public/bin/ ;"
+alias update_magento_media="mkdir /vagrant/temp_media && \
+  tar -xJf /vagrant/temp_media/media.tar.xz --directory=/vagrant/temp_media/  && \
+  rsync -av --remove-source-files /vagrant/temp_media/ /vagrant/public/pub/media/ ;";
+
+
+# MAGENTO FUNCTIONS
+function extract { cp "$1" /vagrant/mount/export/ ; }
+function import { cp /vagrant/mount/import/"$1" . ; }
+function multiextract { cp -R "$1" /vagrant/mount/export/ ; }

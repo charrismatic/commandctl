@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# =============================================================================
+# 1. BASH BASICS
+# =============================================================================
+# /----------------------------------------------------------------------------
+# FILESYSTEM: CONTROL
+# -----------------------------------------------------------------------------
+alias rm="rm --interactive=once --dir --verbose"
+alias rmrf="sudo rm -rf"
+alias cp="cp --interactive --preserve --verbose"
+alias cp_new="cp --interactive --preserve --update --verbose"
+alias mv="mv --interactive --verbose"
+alias mv_new="mv --interactive --update --verbose"
+alias mkdir="mkdir -pv"
+alias chown="chown --preserve-root"
+alias chmod="chmod --preserve-root"
+alias chgrp="chgrp --preserve-root"
+alias mkdir="mkdir -pv"
+
+# /----------------------------------------------------------------------------
+# FILESYSTEM: CHANGES
+# -----------------------------------------------------------------------------
+alias diffy="diff --color --ignore-all-space --ignore-blank-lines --side-by-side --suppress-common-lines --recursive --exclude=*.git/*"
+
+# /----------------------------------------------------------------------------
+# MEMORY
+# -----------------------------------------------------------------------------
+alias free="free -ht"
+
+## -----------------------------------------------------------------------------
+## SYSADMIN: SECURITY
+## -----------------------------------------------------------------------------
+## alias lynis="~/bin/lynis"
+## get system stats
+## sar -b -B -d -H -I ALL -m ALL -n ALL -q -r -R -S -u ALL -v -w -W -y | less
+
+
+# /----------------------------------------------------------------------------
+# PACKAGES\
+# -----------------------------------------------------------------------------
+alias apt.install="sudo apt-get install"
+alias apt.update="sudo apt-get update"
+alias apt.show="apt show"
+alias apt.search="apt-grep"    # <- is custom function
+alias aptgrep="apt-cache search $1 | grep -v $GREP_IGNORE  | grep $1 --color "    # <- is custom function
+
+# /----------------------------------------------------------------------------
+# EDITORS --wordchars= --linenumbers --autoindent --rebinddelete --tabsize=2 --nowrap
+# -----------------------------------------------------------------------------
+alias edit="nano --syntax=shell --wordbounds --atblanks --unix --smooth --smarthome --suspend  --tabstospaces"
+
+# /----------------------------------------------------------------------------
+#  ARCHIVES
+# -----------------------------------------------------------------------------
+alias peek.tar="tar -tvf"
+alias peek.tar_gz="tar -ztvf"
+alias peek.tar_bz2="ta -jtvf"
+alias how_to_unzip_this="echo type extract"
+
+# /----------------------------------------------------------------------------
+# MISC
+# -----------------------------------------------------------------------------
+alias timestamp="date +'%y%m%d.%H%M%S'"
+alias datestamp="date +'%Y-%m-%d %H:%M:%S'"
+alias screenfix="echo -e "\033c""
+## alias screenfix="reset"
+## /----------------------------------------------------------------------------
+
+## REVERSE ENGINEERING
+## -----------------------------------------------------------------------------
+##strings -w -s " " -e L
+##strings -w -s " " -e l
+##strings -w -s " " -e B
+##strings -w -s " " -e b
+##strings -w -s " " -e S
+##strings -w -s " " -e s
+alias stringclean="strings -w -s ' ' -e s"
+alias findcat="find ./ -type f -exec cat {} \;"
+alias findls="find ./ -type f -ls"

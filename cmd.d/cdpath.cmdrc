@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# ------------------------------------
+# cd [-L|[-P [-e]] [-@]] [dir]
+# Inspired by the question and answers here, I added the lines below
+# to my ~/.bashrc file. With this you have a favdir command (function)
+# to manage your favorites and a autocompletion function to select an
+# item from these favorites.
+# ------------------------------------
+# - Favorites
+# ------------------------------------
+__favdirs_storage=~/.favdirs
+
+__favdirs=( "$HOME" )
+
+containsElement () {
+    local e
+    for e in "${@:2}"; do [[ "$e" == "$1" ]] && return 0; done
+    return 1
+}
+
+
+function favdirs() {
+
+    local cur
+    local IFS
+    local GLOBIGNORE
+
+    case $1 in
+        list)
+            echo "favorite folders ..."
+            printf -- ' - %s\n' "${__favdirs[@]}"
+            ;;
+        load)
+            if [[ ! -e $__favdirs_storage ]] ; then
+                favdirs save
+            fi
+            # mapfile requires bash 4 / my OS-X bash vers. is 3.2.53 (from 2007 !!?!).
+            # mapfile -t __favdirs < $__favdirs_storage
+            IFS=$'\r\n' GLOBIGNORE='*' __favdirs=($(< $__favdirs_storage))
+            ;;
+        save)
+            printf -- '%s\n' "${__favdirs[@]}" > $__favdirs_storage
+            ;;
+        add)
+            cur=${2-$(pwd)}
+            favdirs load
+            if containsElement "$cur" "${__favdirs[@]}" ; then
+                echo "'$cur' allready exists in favorites"
+            else
+                __favdirs+=( "$cur" )
+                favdirs save
+                echo "'$cur' added to favorites"
+            fi
+            ;;
+        del)
+            cur=${2-$(pwd)}
+            favdirs load
+            local i=0
+            for fav in "${__favdirs[@]}"; do
+                if [ "$fav" = "$cur" ]; then
+                    echo "delete '$cur' from favorites"
+                    unset "__favdirs[$i]"
+                    favdirs save
+                    break
+                fi
+                let i++
+            done
+            ;;
+        *)
+            echo "Manage favorite folders."
+            echo ""
+            echo "usage: favdirs [ list | load | save | add | del ]"
+            echo ""
+            echo "  list : list favorite folders"
+            echo "  load : load favorite folders from $__favdirs_storage"
+            echo "  save : save favorite directories to $__favdirs_storage"
+            echo "  add  : add directory to favorites [default pwd $(pwd)]."
+            echo "  del  : delete directory from favorites [default pwd $(pwd)]."
+    esac
+} && favdirs load
+
+
+
+function __favdirs_compl_command() {
+    COMPREPLY=( $( compgen -W "list load save add del" -- ${COMP_WORDS[COMP_CWORD]}))
+} && complete -o default -F __favdirs_compl_command favdirs
+
+
+
+function __favdirs_compl() {
+    local IFS=$'\n'
+    COMPREPLY=( $( compgen -W "${__favdirs[*]}" -- ${COMP_WORDS[COMP_CWORD]}))
+}
+
+
+alias _cd='cd'
+complete -F __favdirs_compl _cd
+
+# ------------------------------------
+# favdirs
+# ------------------------------------
+# Within the last two lines, an alias to change the current directory (with autocompletion) is created. With this alias (_cd) you are able to change to one of your favorite directories. May you wan't to change this alias to something which fits your needs.
+# With the function favdirs you can manage your favorites (see usage).
+# Manage favorite folders.
+# usage: favdirs [ list | load | save | add | del ]
+#  list : list favorite folders
+#  load : load favorite folders from ~/.favdirs
+#  save : save favorite directories to ~/.favdirs
+#  add  : add directory to favorites [default pwd /tmp ].
+#  del  : delete directory from favorites [default pwd /tmp ].
+# ------------------------------------
+#lso, have a look at CDPATH
+# colon-separated list of search paths available to the cd command, similar in function to the
+##ATH variable for binaries. The $CDPATH variable may be set in the local ~/.bashrc file.
+#bash$ cd bash-doc
+#bash: cd: bash-doc: No such file or directory
+#bash$ CDPATH=/usr/share/doc
+#bash$ cd bash-doc
+#/usr/share/doc/bash-doc
+#bash$ echo $PWD
+#/usr/share/doc/bash-doc
+#and
+#cd -

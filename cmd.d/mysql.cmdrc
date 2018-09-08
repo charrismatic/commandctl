@@ -1,0 +1,41 @@
+#!/bin/bash
+
+
+
+# -----------------------------------------------------------------------------
+# MYSQL
+# -----------------------------------------------------------------------------
+alias mysql_restart="sudo systemctl restart mysqld.service"
+#alias import_db = "mysql -udeveloper -pSECRET < ~/site_date/db_source/$(get_the_latest.sql)"
+
+# FIST IMPORT WITH CREATE / DROP IF EXISTS
+#alias update_db_source = "" #SET DB_SOURCE TO CURRENT LATEST DB EXPORT
+#alias update_db = "" #TAKE NEWEST FILE FROM DB SOURCE FOLDER
+#alias reset_db_dev = "" # NUKE IT, RESET TO LATEST DB_SOURCE
+
+# DEVELOPMENT ONLY
+function export_db () {
+  PROJECT=${1:-"mysql_export"}
+  TIMESTAMP=$(date -d today +%y.%m.%d.%H%I%M%S)
+  DB_USER="developer"
+  DB_PASS=SECRET
+  FILE_NAME=$PROJECT.$TIMESTAMP.sql
+  FILE_PATH=/home/vagrant/etc/migrations
+  mysqldump -u$DB_USER -p$DB_PASS $PROJECT > "$FILE_PATH/$FILE_NAME"
+  exit 0
+}
+
+# DEVELOPMENT ONLY
+function import_db () {
+  FILE_NAME=$1
+  DB_USER="developer"
+  DB_PASS=SECRET
+
+  if [ $FILE_NAME = "" ]
+  then
+    echo "Error: Filename missing"
+    exit 1
+  else
+    mysql -u$DB_USER -p$DB_PASS < "/home/vagrant/etc/migrations/$FILE_NAME"
+  fi
+}

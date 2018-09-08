@@ -1,0 +1,68 @@
+#!/bin/bash
+
+THISPATH=$LIB0_CMDPATH/cmd.r/log_views.cmdrc
+# /----------------------------------------------------------------------------
+# SYSADMIN: JOURNAL AND LOGS
+# -----------------------------------------------------------------------------
+
+alias j="journalctl --pager-end --all "
+alias jl.now="journalctl --merge --pager-end --catalog --no-hostname --utc --since -1d"
+alias jl.cat="journalctl --all --no-pager"
+alias jl.more="journalctl --merge --pager-end --catalog --no-hostname --utc --since -1d"
+alias jl.grep.all="journalctl --all --full --no-pager | grep --ignore-case --color"
+alias jl.grep.today="journalctl --merge --no-pager --no-hostname --since -7d | grep -gnore-case --color"
+alias jl.grep="journalctl --merge --no-pager --no-hostname | grep -gnore-case --color"
+
+
+alias jl.end="journalctl --all --pager-end"
+alias jle="journalctl --all --pager-end"
+alias jl.follow="journalctl --merge --follow --no-hostname"
+alias jlf="journalctl --merge --follow --no-hostname"
+
+alias jl.is.10min="journalctl --merge --no-hostname --full --all --pager-end --since -10min"
+alias jl.is.1day="journalctl --merge --no-hostname --full --all --pager-end --since -1day"
+alias jl.is.1hr="journalctl --merge --no-hostname --full --all --pager-end --since -1hr"
+alias jl.is.30min="journalctl --merge --no-hostname --full --all --pager-end --since -30min"
+
+alias jl.lvl0="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=0"
+alias jl.lvl1="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=1"
+alias jl.lvl2="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=2"
+alias jl.lvl3="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=3"
+alias jl.lvl4="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=4"
+alias jl.lvl5="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=5"
+alias jl.lvl6="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=6"
+alias jl.lvl7="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=7"
+alias jl.pid="journalctl --no-hostname --full --all _PID="
+alias jl.search="journalctl --merge --no-pager --no-hostname --since -7d | grep -i --color"
+alias jl.since="journalctl --merge --no-hostname --full --all --pager-end --since "
+alias jl.stat_example="echo -e \"Environment Variables:\n  _COMM=atom \n  _CMDLINE=/usr/share/atom/atom\n  _EXE=/usr/share/atom/atom\n  SYSLOG_IDENTIFIER=atom.desktop\""
+alias jl.stat_files="journalctl --field=CODE_FILE --root=/"
+alias jl.stat_head="journalctl --header"
+alias jl.stat_nice="sudo journalctl --merge --reverse --catalog  --utc --field=\"CODE_FILE\",\"CODE_LINE\",\"PRIORITY\",\"MESSAGE\" --output short"
+alias jl.stat_shrink="journalctl --vacuum-size=512M"
+alias jl.stat_size="journalctl --disk-usage"
+alias jl.today="journalctl --pager-end --no-hostname --full --all --since -1hr"
+alias jl.unit="journalctl --merge --pager-end --full --catalog --no-hostname --utc --since -1d --unit"
+alias jl.user_units="journalctl --no-hostname --full --all --user-unit"
+alias kern_log="tail -f /var/log/kern.log"
+alias sys_log="tail -f /var/log/syslog"
+alias unit_log="journalctl --merge --pager-end --full --catalog --no-hostname --utc --since -1d --unit"
+alias log.verbose="journalctl -x -e --merge --pager-end --no-pager --lines 1 --no-hostname --output verbose --output-fields=\"MESSAGE,_PID,_UID,_GID,_AUDIT_SESSION,_AUDIT_LOGINUID,_SYSTEMD_OWNER_UID,_SYSTEMD_UNIT,_SYSTEMD_SLICE,_SYSTEMD_USER_SLICE,_TRANSPORT,PRIORITY,_COMM,_EXE,_CMDLINE,_SYSTEMD_CGROUP,_SYSTEMD_USER_UNIT,SYSLOG_IDENTIFIER\""
+alias comm_log="journalctl --merge --pager-end --catalog --no-hostname --utc --since -1"
+alias dbus_warnlog="journalctl /usr/bin/dbus-daemon --no-hostname --output cat --priority 4"
+alias dmesg="dmesg --decode --facility=kern,user,daemon,syslog --syslog -t --time-format=iso --userspace --human"
+alias errorlog="journalctl --merge --pager-end --catalog --no-hostname --all --since -7d PRIORITY=1 + PRIORITY=2 + PRIORITY=3 + PRIORITY=1"
+
+## --identifier | # unitlog SYSTEMD_IDENTIFER
+## errorlog
+## pidlog plog - process log
+# -----------------------------------------------------------------------------
+# SYSADMIN: JOURNAL AND LOG WATCHERS
+# -----------------------------------------------------------------------------
+
+## log.grep
+alias log.tail="find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
+alias log.tail.short="journalctl --merge --catalog --no-full --no-hostname --output cat --follow"
+alias log.tail.long="--merge --follow --catalog --no-hostname --full --all --no-tail"
+alias shortlog_stream="journalctl --merge --reverse --catalog --no-hostname --utc --output-fields=\"CODE_FILE\",\"CODE_LINE\",\"PRIORITY\",\"MESSAGE\" --output short"
+alias microlog_stream="journalctl --merge --reverse --catalog --no-hostname --output cat"

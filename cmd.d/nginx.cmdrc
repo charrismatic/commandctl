@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# ---------------------------------
+# - WEB: NGINX
+# -----------------------------------
+alias nx.test="sudo nginx -t"
+alias nx.dump="sudo nginx -T"
+alias nx.goto="cd /etc/nginx"
+alias nx.cat="cat /etc/nginx/sites-available/"
+alias nx.edit="sudo nano /etc/nginx/sites-available/"
+alias nx.reload="sudo systemctl reload nginx.service"
+alias nx.status="sudo systemctl status nginx.service"
+alias nx.site.enable="sudo ln -s /etc/nginx/sites-available/$SITE_NAME /etc/nginx/sites-enabled/$SITE_NAME"
+alias nx.site.remove="sudo rm /etc/nginx/sites-enabled/\b"
+alias nx.log.access.cat="cat /var/log/nginx/access.log"
+alias nx.log.access.ips="cat /var/log/nginx/access.log | column -t | cut -b -20 | sort --unique"
+alias nx.log.access.explore='cat /var/log/nginx/access.log | sort | column -t -s "\[\]\(\)\"" | grep -v 199.66.69.218 | less'
+alias nx.log.access.tail="tail -f /var/log/nginx/access.log"
+alias nx.log.error.tail="tail -f /var/log/nginx/error.log"
+alias nginx_restart="sudo systemctl restart nginx.service"

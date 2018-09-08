@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# TRUNCATE THE APACHE ERROR LOG
+# RUN IN BACKGROUND WITH: sh watch-apache-log.sh > /dev/null 2>&1 &
+# REF: https://insidethe.agency/blog/how-to-tail-apache-logs-to-ubuntu-notifications
+ap2_logs_watch_apache() {
+  while inotifywait -e modify /var/log/apache2/error.log; do
+    line=$(tail -n1 /var/log/apache2/error.log | cut -c 81-);
+    notify-send "$line";
+  done
+}
+
+## APACHE2
+# -----------------------------------------------------------------------------
+alias ap2.dump="sudo apache2ctl -t -D DUMP_VHOSTS"
+alias ap2.edit="sudo nano /etc/apache/sites-available/\"$1\""
+alias ap2.etc.goto="cd /etc/apache2/"
+alias ap2.goto="cd /etc/apache/"
+alias ap2.hostdown="sudo a2dissite"
+alias ap2.hostup="sudo a2ensite apache2"
+alias ap2.logs="ap2_logs_watch_apache & "
+alias ap2.ls="ls -AgGht --color  /etc/apache2/sites-enabled /etc/apache2/sites-available"
+alias ap2.lsup="ls -AgGht --color /etc/apache2/sites-enabled"
+alias ap2.restart_centos="sudo systemctl restart httpd.service"
+alias ap2.restart="sudo systemctl restart apache2.service"
+alias ap2.show="cat /etc/apache2/sites-available/\"$1\""
+alias ap2.site.goto="cd /etc/apache/sites-available"
+alias ap2.status="sudo systemctl status apache2.service"
+alias ap2.www.goto="co /var/www/"

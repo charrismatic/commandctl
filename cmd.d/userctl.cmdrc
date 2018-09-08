@@ -1,0 +1,27 @@
+#!/bin/bash
+
+## see:   getent nss nsswitch.conf
+# @alias ~/bin/lsusrs
+
+list_system_users () {
+  # LIST USER TABLE
+  echo -e "\n USERS \n"
+  echo -e "USER:-:UID:GID:HOME:WORKINDIR:SHELL\n---:---:---:---:---:---:---\n" | cat - /etc/passwd | column -t -s :
+}
+
+
+list_sytem_groups () {
+  # LIST GROUP TABLE
+  echo -e " \n GROUPS \n"
+  echo -e "GROUP:-:GID:MEMBERS\n---:---:---:---\n" | cat - /etc/group | column -t -s :
+}
+
+
+list_sytsem_information () {
+  echo -e "\n SYSTEM \n"
+  echo -e "Hostname: $HOSTNAME \nDate: $(date)"
+}
+
+alias ls.users="list_system_users"
+alias ls.groups="list_sytem_groups"
+alias ls.system="list_sytsem_information"

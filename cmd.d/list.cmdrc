@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# =============================================================================
+# 1. BASH BASICS
+# =============================================================================
+
+# /----------------------------------------------------------------------------
+# LIST
+# -----------------------------------------------------------------------------
+alias l="ls -1 --size --color --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --sort=version --group-directories-first --ignore-backups --show-control-chars --indicator-style classify"
+alias ll="ls -l --color=always --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --almost-all --classify --sort=none -v"
+alias la="ls -alHFSh --group-directories-first --no-group --color"
+alias llt="ls -l --time-style=\"+%m-%d %H:%M\" --color=always --human-readable --no-group --almost-all --sort=time --time=ctime --reverse"
+alias lltr="ls -l --time-style=\"+%m-%d %H:%M\" --color=always --human-readable --no-group --almost-all --sort=time --time=ctime"
+alias llg="ls -l --color=always --group-directories-first --block-size=M --no-group --almost-all -v"
+# /----------------------------------------------------------------------------
+# SORT
+# -----------------------------------------------------------------------------
+alias sort_size="ls -aFlss --block-size=k --no-group --time-style=+'%b%e %H:%M' --group-directories-first"
+alias sort_date="ls -aFhlrt --no-group --time-style=+'%b%e %H:%M' --group-directories-first"
+# alias sort_folders="find . -maxdepth 1 -type d -print | xargs du -sk | sort -rn"
+alias sort_folders="du -c -d 1 --block-size=M --threshold=1M | sort -rn"
+alias sort_folders-1="du -c -d 1 --block-size=M --threshold=1M | sort -rn"
+alias sort_folders-2="du -c -d 2 --block-size=M --threshold=1M | sort -rn"
+alias sort_folders-3="du -c -d 3 --block-size=M --threshold=1M | sort -rn"
+alias sort_extension="ls -atlrh --sort=size --block-size=M --no-group -g --group-directories-first --time-style=+'%e%b %H:%M\'"
+# /----------------------------------------------------------------------------
+# TREE
+# -----------------------------------------------------------------------------
+alias tree2="tree -Ch --sort=size  --dirsfirst -L 2"
+alias tree3="tree -Ch --sort=size  --dirsfirst -L 3"
+alias tree4="tree -Ch --sort=size  --dirsfirst -L 4"
+alias ltree="ls -R | grep \":$\" | sed -e \"s/:$//\" -e \"s/[^-][^\/]*\//--/g\" -e \"s/^/ /\" -e \"s/"
+alias tree_size="find ./ -maxdepth 2 -type d -a -not -path \"*/node_modules/*\" -exec du --summarize --block-size=k {} \;"
+alias tree_size3="find ./ -maxdepth 3 -type d -a -not -path \"*/node_modules/*\" -exec du --summarize --block-size=k {} \;"
+# /----------------------------------------------------------------------------
+# FILESYSTEM: SPACE
+# -----------------------------------------------------------------------------
+alias df="df -ah --tota --block-size=M"
+alias diskspace="df -Th --block-size=M | sort -nr"
+alias folder_size="pwd; du -s --block-size=M;"
+alias folder_size_all="du -S --block-size=M | sort -nr | more;"

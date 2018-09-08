@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# =============================================================================
+#  MATT HARRIS
+#  m@ttHarri.is
+#  11/14/2017, 12:01:19 PM
+# =============================================================================
+
+
+# LOAD FUNCTIONS FIRST - SOME ALIASES REFERENCE THEM
+
+
+#unset COMMANDCTL_PATH
+
+COMMOD_DIR=cmd.d
+COMMOD_EXT=cmdrc
+COMMANDCTL_INDEX=.commandrc
+export COMMANDCTL_PATH=$LIB0_SHELLPATH/$COMMOD_DIR
+export COMMANDCTL_INDEX_PATH=$LIB0_SHELLPATH/$COMMANDCTL_INDEX 
+
+# COMMAND MODULES 
+# =============================================================================
+
+# @GROUP [UNIX CORE COMMANDS]
+# -----------------------------------------------------------------------------
+source $COMMANDCTL_PATH/archive_extract.$COMMOD_EXT
+source $COMMANDCTL_PATH/cdpath.$COMMOD_EXT
+source $COMMANDCTL_PATH/cdpath.pushpop.$COMMOD_EXT
+source $COMMANDCTL_PATH/list.$COMMOD_EXT
+source $COMMANDCTL_PATH/log_views.$COMMOD_EXT
+source $COMMANDCTL_PATH/path_navigation.$COMMOD_EXT
+source $COMMANDCTL_PATH/search_grep.$COMMOD_EXT
+source $COMMANDCTL_PATH/search_find.$COMMOD_EXT
+source $COMMANDCTL_PATH/system_query.$COMMOD_EXT
+source $COMMANDCTL_PATH/unix.$COMMOD_EXT
+source $COMMANDCTL_PATH/xsession.$COMMOD_EXT
+# -----------------------------------------------------------------------------
+
+# @GROUP [SYSTEM ADMIN COMMANDS]
+# -----------------------------------------------------------------------------
+source $COMMANDCTL_PATH/network.$COMMOD_EXT
+source $COMMANDCTL_PATH/safeguard.$COMMOD_EXT
+source $COMMANDCTL_PATH/sytemctl.$COMMOD_EXT
+source $COMMANDCTL_PATH/userctl.$COMMOD_EXT
+# -----------------------------------------------------------------------------
+
+# @GROUP [DEVELOPER COMMANDS]
+# -----------------------------------------------------------------------------
+source $COMMANDCTL_PATH/vagrant.$COMMOD_EXT
+source $COMMANDCTL_PATH/mysql.$COMMOD_EXT
+source $COMMANDCTL_PATH/web.$COMMOD_EXT
+# -----------------------------------------------------------------------------
+
+# @GROUP [SERVER / REMOTE COMMANDS]
+# -----------------------------------------------------------------------------
+#source $COMMANDCTL_PATH/ghost.$COMMOD_EXT
+#source $COMMANDCTL_PATH/gitlab.$COMMOD_EXT
+#source $COMMANDCTL_PATH/apache2.$COMMOD_EXT
+#source $COMMANDCTL_PATH/nginx.$COMMOD_EXT
+#source $COMMANDCTL_PATH/mattermost.$COMMOD_EXT
+#source $COMMANDCTL_PATH/gitea.$COMMOD_EXT
+#source $COMMANDCTL_PATH/magento2.$COMMOD_EXT
+#source $COMMANDCTL_PATH/wp.$COMMOD_EXT
+# -----------------------------------------------------------------------------
+
+# @GROUP [LOCAL USER COMMANDS]
+# -----------------------------------------------------------------------------
+# Theme setup, window application, desktop related commands only usable at
+# your local machine
+# -----------------------------------------------------------------------------
+#source $COMMANDCTL_PATH/local.func.getterm_theme
+#source $COMMANDCTL_PATH/local.func.colorterm
+# -----------------------------------------------------------------------------
+
+
+# DYNAMICALY GENEREATED 
+# =============================================================================

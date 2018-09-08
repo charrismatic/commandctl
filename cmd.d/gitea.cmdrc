@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+## GITEA 
+alias gitea_config_cat="cat /etc/gitea/app.ini"
+alias gitea_config_edit="sudo nano /etc/gitea/app.ini"
+alias gitea_config_backup="sudo cp /etc/gitea/app.ini /etc/gitea/app.ini.bak"
+alias gitea_service_cat="cat /etc/systemd/system/gitea.service"
+alias gitea_service_edit="sudo nano /etc/systemd/system/gitea.service"
+alias gitea_service_backup="cp /etc/systemd/system/gitea.service ~/backups/gitea.service.bak"
+alias gitea_service_show="systemctl show gitea.service"
+alias gitea_status="systemctl status gitea.service"
+alias gitea_restart="sudo systemctl restart gitea.service"
+alias gieat_backup="gitea dump --verbose --database sqlite3 --config /etc/gitea/app.ini"
+alias gitea_goto_opt="cd /opt/data/gitea/"
+alias gitea_goto_www="cd /var/www/gitea"
+alias gitea_log_http_tail="tail -f /var/www/gitea/log/http.log"
+alias gitea_log_xorm_tail="tail -f /var/www/gitea/log/xorm.log"
+

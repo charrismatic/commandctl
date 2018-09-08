@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+## VAGRANT (CLIENT SIDE)
+# -----------------------------------------------------------------------------
+alias vup="vagrant up --no-provision"
+alias vstop="vagrant halt"
+alias vkill="vagrant destroy"
+alias vfile="cat Vagrantfile"
+alias vconfig="cat Vagrantfile | grep 'vm.' | grep -v '^#' --color=always"
+alias vssh="vagrant ssh"
+alias vstat="vagrant status"
+alias vlist="vagrant global-status"
+alias vkillall="vboxmanage list runningvms | sed -r 's/.|\{(.*\}/|\1/' | xargs -L1 -I {} VBoxManage controlvm {} poweroff"
+alias update_vagrant_user="cp /home/etc/bash/.bashrc /home/vagrant/.bashrc && source /home/vagrant/.bashrc ;"

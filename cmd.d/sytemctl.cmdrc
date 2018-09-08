@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# =============================================================================
+# ALIASES AND HELPERS FOR SYSTEMD AND SYSTEM CONTROL GROUPS
+# =============================================================================
+
+# /----------------------------------------------------------------------------
+# SYSADMIN
+# -----------------------------------------------------------------------------
+alias sc="systemctl"
+alias sysstat="systemctl status --all"
+
+# =============================================================================
+# SYSTEM CONTROL. MAIN <ALIAS>
+# -----------------------------------------------------------------------------
+alias scstat="systemctl status --all --full"
+alias sc.status="systemctl status"
+alias sc.status.all="systemctl status --all"
+## alias sc.alias.enable="NOT YET IMPLEMENTED"
+## alias sc.alias.disable="NOT YET IMPLEMENTED"
+
+# =============================================================================
+# SYSTEM CONTROL. IS <ALIAS>
+# -----------------------------------------------------------------------------
+alias sc.is.running="systemctl is-running"
+alias sc.is.active="systemctl is-active"
+alias sc.is.fail="systemctl is-failed"
+alias sc.is.enabled="systemctl is-enabled"
+
+# =============================================================================
+# SYSTEM CONTROL. AUTHORING <ALIAS>
+# -----------------------------------------------------------------------------
+alias sc.edit="systemctl edit"
+alias sc.link="systemctl link"
+alias sc.getdefault="systemctl get-default"
+alias sc.setdefault="systemctl set-default"
+alias sc.revert="systemctl revert"
+alias sc.mask="systemctl mask"
+alias sc.mask="systemctl unmask"
+
+# =============================================================================
+# SYSTEM CONTROL. COMMAND <ALIAS>
+# -----------------------------------------------------------------------------
+alias sc.show="systemctl show"
+alias sc.stop="systemctl stop"
+alias sc.start="systemctl start"
+alias sc.enable="systemctl enable"
+alias sc.disable="systemctl disable"
+alias sc.restart="systemctl restart"
+alias sc.reload="systemctl reload"
+alias sc.refresh="systemctl reload-or-restart"
+alias sc.refresh.try="systemctl try-reload-or-restart"
+
+# =============================================================================
+# SYSTEM CONTROL. QUERY <ALIAS>
+# -----------------------------------------------------------------------------
+alias sc.find="systemctl cat"
+alias sc.ls.jobs="systemctl status"
+alias sc.ls.timers="systemctl list-timers"
+alias sc.ls.units="systemctl list-units"
+alias sc.ls.unit-files="systemctl list-unit-files"
+alias sc.ls.depends="sytecmctl list-dependencies"
+alias sc.ls.requires="sytecmctl list-dependencies --reverse"
+alias sc.ls.sockets="systemctl list-sockets"
+alias sc.ls.machines="systemctl list-machines"
+
+# =============================================================================
+# SYSTEM CONTROL. OTHER <ALIAS>
+# -----------------------------------------------------------------------------
+alias sc.jobs.cancel="systemctl cancel"
+alias sc.jobs="systemctl list-jobs"
+alias sc.env="systemctl show-environment"
+alias sc.env.dump="systemctl show-environment"
+alias sc.env.set="systemctl unset-environment"
+alias sc.env.unset="systemctl unset-environment"
+alias sc.dmon.reload="daemon-reload"
+alias sc.dmon.restart="daemon-reexec"
+
+### =============================================================================
+## SYSTEM CONTROL. NOT YET IMPLEMENTED
+## -----------------------------------------------------------------------------
+##alias sc.set-property=""
+##alias isolate =""
+##alias preset=""
+##alias unit-toggle-group=""
+##alias unmask=""
+##alias link""
+##alias add-wants=""
+##alias add-requires=""
+##alias unit-get-default=""
+##alias unit-set-defealt=""
+alias sc.rsq.listkeys="bin/system_rescue_help"
+
+##
+

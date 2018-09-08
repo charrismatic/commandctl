@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# ---------------------------------
+# - WEB.OPS - MATTERMOST 
+# -----------------------------------
+alias mm.help="/opt/mattermost/bin/platorm help"
+alias mm.goto.opt="cd /opt/mattermost"
+alias mm.log.cat="cat /opt/mattermost/logs"
+alias mm.log.ls="ls /opt/mattermost/logs"
+alias mm.log.tail="tail -f /opt/mattermost/logs"
+alias mm.status="systemctl status mattermost.service"
+alias mm.reload="sudo systemctl reload mattermost.service"
+alias mm.config.cat="cat /opt/mattermost/config/config.json"
+alias mm.config.edit="sudo nano /opt/mattermost/config/config.json"
+

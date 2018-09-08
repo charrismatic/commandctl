@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# -----------------------------------------------------------------------------
+alias composer="~/bin/composer"
+alias wp="~/bin/wp"
+alias laravel="php artisan"
+
+## LETSENCRYPT
+alias lecrypt_logs_view="less /var/log/letsencrypt/letsencrypt.log"
+alias lecrypt_certs_list="sudo ls /etc/letsencrypt/live/"
+
+# ---------------------------------
+# - WEB.OPS - SERVING CONTENT
+# -----------------------------------
+alias phpserve="php -S localhost:8001 -t ."
+alias web="cd /var/www"

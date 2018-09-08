@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# -------------------------------'-v'
+#  WEB.OPS
+# -----------------------------------
+# WEB APPLICATION CONFIGURATION MANAGEMENT AND PROVISIONING
+
+export GHOST_SERVICE_NAME=ghost_soyo-soy.service
+
+## GHOST
+alias gs.config.cat='cat /var/www/ghost/config.production.json'
+alias gs.config.edit='sudo nano /var/www/ghost/config.production.json'
+alias gs.goto.www='cd  ${GHOST_HOME:-/var/www/ghost/}'
+alias gs.journal='sudo journalctl -u ghost_soyo-soy -n 50\'
+alias gs.status='sudo systemctl status ${GHOST_SERVICE_NAME}'
