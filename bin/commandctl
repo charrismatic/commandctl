@@ -1,14 +1,15 @@
 #!/bin/bash
 
-
 # command [-pVv] command [arg ...]
 #   causes  a single word indicating the command or filename used to invoke command to be displayed;
 #    the -V option produces a more verbose description.
 #   If the -V or -v option is supplied, the exit status is 0 if command was found, and 1 if not.
 #   If neither option is supplied and an error occurred or command cannot be found, the exit status is 127.
 #   Otherwise, the exit status of the  command builtin is the exit status of command.
-#
 
+if [ -z "$EDITOR" ]; then
+  EDITOR=nano
+fi
 
 
 _commandctl_help () {
@@ -17,14 +18,14 @@ _commandctl_help () {
   echo -e "  list                  - list all commands"
   echo -e "  search                - search through commands by keyword"
   echo -e "  modules               - list current command modules and details"
-  echo -e "  show                  - show module commands"
-  echo -e "  edit                  - edit module commands"
-  echo -e "  new                   - add a new command module"
+  echo -e "  show <group>          - show module commands"
+  echo -e "  edit <group>          - edit module commands"
+  echo -e "  new <group>           - add a new command module"
   echo -e "  goto                  - change directory to the command repository"
+  echo -e "  manage                - edit the modules manifest to enable or disable groups"
   echo -e "  reload                - reload the command files after a  change is made"
-  
+
   _list_paths
-  
   echo -e "\n"
 }
 
@@ -40,32 +41,33 @@ _list_paths () {
 
 
 _list_commands () {
-   alias -p | grep -v \#\# | grep -e 'alias' \
-    | sed 's/alias//;s/^\s*//;s/^\([a-zA-Z0-9\.\_\-]*\)\=/\1                                   /' \
-    | sed 's/\([a-zA-Z0-9 \.\_\-]\{,25\}\)\(\s*\)/\1\t/' | sed 's/^\(.\)/   \1/' 
+   echo "List commands"
+   grep -ir --no-filename -e "alias" $COMMANDCTL_PATH \
+	| grep -v -e "^\s*#" | grep -e 'alias' \
+	| sed 's/alias//;s/^\s*//;s/^\([a-zA-Z0-9\.\_\-]*\)\=/\1                                   /' \
+	| sed 's/\([a-zA-Z0-9 \.\_\-]\{,25\}\)\(\s*\)/\1\t/' \
+	| sed 's/^\(.\)/   \1/'
 }
 
 
 _list_modules () {
   echo -e "\nReading  modules list from: \"$COMMANDCTL_INDEX_PATH\"\n"
   grep -i "source" $COMMANDCTL_INDEX_PATH | sort | sed 's/^[^#]/  [ON] s/' | sed 's/^#/ [OFF] /' | sed 's/source \$COMMANDCTL_PATH\// /' \
-    | sed 's/\.$COMMOD_EXT//' 
+    | sed 's/\.$COMMOD_EXT//'
   echo -e "----------------------------------\n"
-  
 }
 
 
 _add_module () {
-
   # INPUT EXISTS OR IT IS AN ERROR
-  $MODULE_NAME=${1:?Error Module Not Defined}
-  NEW_MODULE_PATH=$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT
+  MODULE_NAME=${1:?Error Module Not Defined}
+  NEW_MODULE_PATH="$COMMANDCTL_PATH/$MODULE_NAME.$COMMOD_EXT"
 
   # A FILE BY THIS NAME ALREADY EXISTS
   if [ -a $NEW_MODULE_PATH ]; then
       echo -e "Error:  A module with the name \"$NEW_MODULE_PATH\" already exist\n Please select a different name"
       return 1;
-  else 
+  else
       MODULE_HEADER="#!/bin/bash\n\n# =============================================================================\n"
       MODULE_HEADER="$MODULE_HEADER#  $MODULE_NAME\n# =============================================================================\n"
       MODULE_HEADER="$MODULE_HEADER# Add a short description\n# -----------------------------------------------------------------------------\n"
@@ -75,121 +77,141 @@ _add_module () {
 
       command nano $NEW_MODULE_PATH
 
+      echo "BACKING UP..."
+      echo "cp \"$COMMANDCTL_INDEX_PATH\" \"$LIB0_SHELLPATH/archive/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak\""
       command cp "$COMMANDCTL_INDEX_PATH" "$LIB0_SHELLPATH/archive/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak"
+      echo "source \$COMMANDCTL_PATH/$MODULE_NAME.\$COMMOD_EXT" >> "$COMMANDCTL_INDEX_PATH"
 
-      echo "c p \"$COMMANDCTL_INDEX_PATH\" \"$LIB0_SHELLPATH/archive/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak\""
-      echo "source \$COMMANDCTL_PATH/$MODULE_NAME.\$COMMOD_EXT" >> $COMMANDCTL_INDEX_PATH
       echo "Module has been added. You should now reload and test the commands you added."
-  fi 
-  
+  fi
   return 0
 }
 
 
-_edit_module() {
+_edit_module () {
   SELECTION=${1:?The edit command requires parameter}
-  echo "Editing: $SELECTION $COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
- 
-  if [ -a $COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT ]; then
-    echo "nano $COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
-    command nano $COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT
-  else 
-    echo -e "Module \"$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT\" does not exist\n Please select a different name"
+  MODULE_PATH="$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
+  echo "Editing: $SELECTION - $MODULE_PATH"
+
+  if [ -a "$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT" ]; then
+    echo "${EDITOR} \"$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT\""
+
+    ${EDITOR} "$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
+  else
+    echo -e "Module \"$COMMANDCTL_PATH\/$SELECTION.$COMMOD_EXT\" does not exist\n Please select a different name"
     _list_modules
     return 1
-  fi 
-
+  fi
 }
-
 
 
 _show_module () {
-
   SELECTION=${1:?The edit command requires parameter}
+  MODULE_PATH="$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
+  echo "$SELECTION - $MODULE_PATH"
 
-  echo "Showing: $SELECTION $COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
- 
-  if [ -a $COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT ]; then
-    echo "nano $COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
-    cat /data/0/shell/cmd.d/list.cmdrc | grep -v \#\# | grep -e 'alias\|[\-|]' | \
-      sed 's/alias/\-/;s/\"\s*$//;s/=\"/ __->;/' | sed 's/^\# \/\-/\n\n\# -/' | \
-      sed 's/^\(.*\)\s*__/\1                                             /' | \
-      sed 's/^\(.*\)\(\s\{,30\}\);/\1 \2/g' | sed 's/^\(.\{15,30\}\).*->/\1/' | less --chop-long-lines
-   else 
-    echo -e "Module \"$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT\" does not exist\n Please select a different name"
+  if [ -a "$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT" ]; then
+    cat "$MODULE_PATH" \
+	| grep -v \#\# \
+	| grep -e 'alias\|[\-|]' \
+	| sed 's/alias/\-/;s/\"\s*$//;s/=\"/ __->;/' \
+	| sed 's/^\# \/\-/\n\n\# -/' \
+	| sed 's/^\(.*\)\s*__/\1                                             /' \
+	| sed 's/^\(.*\)\(\s\{,30\}\);/\1 \2/g' \
+	| sed 's/^\(.\{15,30\}\).*->/\1/' \
+	| less --chop-long-lines
+
+    echo "To edit:"
+    echo "${EDITOR} \"$MODULE_PATH\"\n\n"
+  else
+    echo -e "Module $SELECTION \"$MODULE_PATH\" does not exist\n Please select a different name"
     _list_modules
     return 1
-  fi 
+  fi
 }
- 
+
+
+_edit_module_index () {
+  ${EDITOR} "$COMMANDCTL_INDEX_PATH"
+}
+
+
+_save_cmd () {
+  SAVED="$(fc -l -n -1 -1)"
+  echo "Backup last command to local directory .todo"
+  echo "$SAVED"
+  echo "$SAVED" > .todo
+}
+
 
 commandctl () {
   ACTION=${1:-help}
-  
   echo "CommandCtl: $ACTION"
 
   case $ACTION in
-       
+     save)
+        _save_cmd
+        ;;
      list)
-          _list_commands | less -S
+        _list_commands
         ;;
 
   modules)
-          _list_modules 
+        _list_modules
         ;;
 
-     help) 
-          _commandctl_help
+     help)
+        _commandctl_help
         ;;
 
-     goto) 
-        cd $COMMANDCTL_PATH 
+     goto)
+        cd $COMMANDCTL_PATH
         ;;
 
-   reload) 
+   reload)
       echo "source $COMMANDCTL_INDEX_PATH"
-      LIB0_SHELLPATH=$LIB0_SHELLPATH command source $COMMANDCTL_INDEX_PATH 
+      LIB0_SHELLPATH=$LIB0_SHELLPATH command source $COMMANDCTL_INDEX_PATH
       return
         ;;
 
-   search) 
+   search)
       SELECTION=${2:?The search command requires parameter}
-       echo "Searching: $SELECTION"        
+       echo "Searching: $SELECTION"
        _list_commands | grep -i --color -e "$SELECTION"
         ;;
 
       new)
        SELECTION=${2:?"The new module command requires parameter"}
-       echo "Editing: $SELECTION"        
-        _add_module  $SELECTION
+       echo "Editing: $SELECTION"
+        _add_module $SELECTION
         ;;
 
-     edit) 
+     edit)
        SELECTION=${2:?The edit command requires parameter}
         _edit_module $SELECTION
        ;;
 
-    show) 
+    show)
        SELECTION=${2:?The show command requires parameter}
         _show_module $SELECTION
        ;;
 
-       *) 
-        _commandctl_help 
+  manage)
+      _edit_module_index
+	;;
+
+       *)
+        _commandctl_help
       ;;
   esac
 }
 
-# =============================================================================
-# META ALIASES AND MANAGEMENT FUNCTIONS
-# =============================================================================
-alias comctl="commandctl"
-alias comctl.list="commandctl list"
-alias comctl.info="commandctl info"
-alias comctl.help="commandctl help"
-alias comctl.goto="commandctl goto"
-alias comctl.show="commandctl show"
-alias comctl.edit="commandctl edit"
-alias comctl.search="commandctl search"
-alias comctl.reload="commandctl reload"
-alias ls.aliases="commandctl list"
+
+if [ "$COMMANDCTL_DEBUG" = "yes" ]; then
+  echo "0: $0"
+  echo "$: $$"
+  echo "@: $@"
+  echo "commandctl $1"
+fi
+
+commandctl $@
