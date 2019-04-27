@@ -42,17 +42,23 @@ _list_paths () {
 
 _list_commands () {
    echo "List commands"
-   grep -ir --no-filename -e "alias" $COMMANDCTL_PATH \
-	| grep -v -e "^\s*#" | grep -e 'alias' \
-	| sed 's/alias//;s/^\s*//;s/^\([a-zA-Z0-9\.\_\-]*\)\=/\1                                   /' \
-	| sed 's/\([a-zA-Z0-9 \.\_\-]\{,25\}\)\(\s*\)/\1\t/' \
-	| sed 's/^\(.\)/   \1/'
+   find $COMMANDCTL_PATH -type f \
+    -name *.cmdrc \
+    -printf "\n\t[%P]\n\n" \
+    -exec grep -i --no-filename -e "^\s*alias" {} \; \
+    | sed 's/alias//;s/^\s*//;s/^\([a-zA-Z0-9\.\_\-]*\)\=/\1                                   /' \
+    | sed 's/\([a-zA-Z0-9 \.\_\-]\{,25\}\)\(\s*\)/\1\t/' \
+    | sed 's/^\(.\)/   \1/'
 }
 
 
 _list_modules () {
   echo -e "\nReading  modules list from: \"$COMMANDCTL_INDEX_PATH\"\n"
-  grep -i "source" $COMMANDCTL_INDEX_PATH | sort | sed 's/^[^#]/  [ON] s/' | sed 's/^#/ [OFF] /' | sed 's/source \$COMMANDCTL_PATH\// /' \
+  grep -i "source" $COMMANDCTL_INDEX_PATH \
+  | sort \
+  | sed 's/^[^#]/  [ON] s/' \
+  | sed 's/^#/ [OFF] /' \
+  | sed 's/source \$COMMANDCTL_PATH\// /' \
     | sed 's/\.$COMMOD_EXT//'
   echo -e "----------------------------------\n"
 }
@@ -78,8 +84,8 @@ _add_module () {
       command nano $NEW_MODULE_PATH
 
       echo "BACKING UP..."
-      echo "cp \"$COMMANDCTL_INDEX_PATH\" \"$LIB0_SHELLPATH/archive/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak\""
-      command cp "$COMMANDCTL_INDEX_PATH" "$LIB0_SHELLPATH/archive/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak"
+      echo "cp \"$COMMANDCTL_INDEX_PATH\" \"$LIB0_SHELLPATH/.backup/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak\""
+      command cp "$COMMANDCTL_INDEX_PATH" "$LIB0_SHELLPATH/.backup/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak"
       echo "source \$COMMANDCTL_PATH/$MODULE_NAME.\$COMMOD_EXT" >> "$COMMANDCTL_INDEX_PATH"
 
       echo "Module has been added. You should now reload and test the commands you added."
@@ -112,14 +118,14 @@ _show_module () {
 
   if [ -a "$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT" ]; then
     cat "$MODULE_PATH" \
-	| grep -v \#\# \
-	| grep -e 'alias\|[\-|]' \
-	| sed 's/alias/\-/;s/\"\s*$//;s/=\"/ __->;/' \
-	| sed 's/^\# \/\-/\n\n\# -/' \
-	| sed 's/^\(.*\)\s*__/\1                                             /' \
-	| sed 's/^\(.*\)\(\s\{,30\}\);/\1 \2/g' \
-	| sed 's/^\(.\{15,30\}\).*->/\1/' \
-	| less --chop-long-lines
+    | grep -v \#\# \
+    | grep -e 'alias\|[\-|]' \
+    | sed 's/alias/\-/;s/\"\s*$//;s/=\"/ __->;/' \
+    | sed 's/^\# \/\-/\n\n\# -/' \
+    | sed 's/^\(.*\)\s*__/\1                                             /' \
+    | sed 's/^\(.*\)\(\s\{,30\}\);/\1 \2/g' \
+    | sed 's/^\(.\{15,30\}\).*->/\1/' \
+    | less --chop-long-lines
 
     echo "To edit:"
     echo "${EDITOR} \"$MODULE_PATH\"\n\n"
@@ -165,7 +171,7 @@ commandctl () {
         ;;
 
      goto)
-        cd $COMMANDCTL_PATH
+        command pushd $COMMANDCTL_PATH
         ;;
 
    reload)
