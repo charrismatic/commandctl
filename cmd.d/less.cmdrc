@@ -1,0 +1,14 @@
+#!/bin/sh
+
+## COLORIZATION
+# https://www.topbug.net/blog/2016/09/27/make-gnu-less-more-powerful/
+# https://superuser.com/questions/117841/get-colors-in-less-or-more
+# REQUIRED: PYTHON PIGMENTS
+# sudo apt-get install python-pygments python3-pygments gawk
+
+function colorless () {
+  pygmentize -l sh $1 | less -S
+}
+
+alias cless="colorless"
+alias c="colorless"

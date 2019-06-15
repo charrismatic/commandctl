@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+# =============================================================================
+# - TASK WARRIOR
+# =============================================================================
+
+_task_start () {
+  TASK_ID=${1:?-"No task specified"}
+  task $TASK_ID start
+}
+
+
+_task_stop () {
+  TASK_ID=${1:?-"No task specified"}
+  task $TASK_ID stop
+}
+
+
+alias t="task"
+alias t.add="task add"
+alias t.vit="vit"
+alias t.start="_task_start"
+alias t.stop="_task_stop"
+

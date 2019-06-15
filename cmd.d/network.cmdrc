@@ -4,18 +4,80 @@
 # 2. POWERUSER / SYSADMIN FUNCTIONS
 # =============================================================================
 
+_ip2geo (){
+  IPADDR="${1?-'IP is required'}"
+  #GEOLOC="$(geoiplookup $IPADDR)"
+  echo -e "\n----\n$IPADDR\n"
+  geoiplookup $IPADDR
+}
+
+_ip4host () {
+  IPADDR="${1?-'IP is required'}"
+  # same as host -a
+  host -v -t ANY
+}
+
+_whois_ip () {
+  IPADDR="${1?-'IP is required'}"
+  # whois -B -G -H -d -L -a "$IPADDR" \
+  whois -v --raw --verbose --display-redirections "$IPADDR" \
+    | grep -v -E "^[[:space:]]*$|^%.*|^remarks:|^Comments:" \
+    | sort --version-sort --unique
+}
+
+
+_find_ips () {
+   grep --color -r -i --with-filename -E "[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}"  access-logs/
+}
+
+if [[ $RUN_ENV == "TEST" ]]; then
+  echo "TEST"
+   _ip2geo 154.16.10.128
+  exit 0
+else
+  grep -E "^[0-9\.]*\b" .lastlogin -o \
+    | sort --version-sort --unique \
+    | while read IPADR
+      do
+        _ip2geo $IPADR
+        _ip4host $IPADR
+        _whois_ip $IPADR
+      done
+
+fi
+
+
 ### NETWORKING
 alias myip="dig +short http://myip.opendns.com @http://resolver1.opendns.com"
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias http_dump='sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\"'
 alias scp_resume='rsync --partial --progress --rsh=ssh' # Resume a broken scp transfer
 
-## NETWORKING: SOCKETS
+## SOCKETS
 alias ls.socks.short="ss -4ltdn"
 alias ls.socks.long="sudo ss --processes --numeric --udp --ipv4 --listening --tcp --unix --contexts"
-alias ls.ports="sudo lsof -i :22-100"
-alias ls.ports.low="sudo lsof -i :22-100"
-alias ls.ports.high="sudo lsof -iTCP -i :8000-10000"
 
-## NETWORKING: LOG
-# see aliases.loggers
+## PORTS
+alias ls.ports="netstat -tunlap"
+alias ls.routes="netstat -r"
+alias ls.routes="netstat -r"
+alias ls.net="sudo lsof -P -n -i"
+alias ls.net.4="sudo lsof -P -n -i4"
+alias ls.net.4.resolve="sudo lsof -P -i4"
+alias ls.net.6="sudo lsof -P -n -i6"
+alias ls.net.tcp="sudo lsof -P -n -iTCP"
+alias ls.net.udp="sudo lsof -P -n -iUDP"
+alias ls.net.localhost="sudo lsof -P -n  -i@localhost"
+
+## MONITORING
+alias dnstop='dnstop -l 5 enp30s0'
+alias vnstat='vnstat -i enp30s0'
+alias iftop='iftop -i enp30s0'
+alias tcpdump='tcpdump -i enp30s0'
+alias ethtool='ethtool enp30s0'
+
+# NETWORK CONNECTION DEVICE REPORT
+alias net.report.devices="nmcli -color yes -mode multiline -fields common device show"
+alias net.report.devices-full="nmcli -color yes -pretty -mode multiline -fields all device show"
+alias net.report.live="vnstat -l"
+alias net.report.stats="netstat -s"

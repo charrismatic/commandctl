@@ -1,0 +1,96 @@
+#!/bin/bash
+
+# =============================================================================
+# - DEVELOPER NOTES
+# =============================================================================
+# Aliases and functions for personal note management
+# -----------------------------------------------------------------------------
+
+
+_list_notes () {
+  TOPIC=${1:-""}
+
+  echo "Listing notes by topic"
+  echo "Select a topic to see notes in this folder"
+
+  #find "$DEVNOTES_PATH/$TOPIC" \( -path *node_modules -o -path *.git \) -prune -o -type f -printf "  %P\n" | sort
+
+  ls "$DEVNOTES_PATH/$TOPIC" \
+	--group-directories-first \
+	--color \
+	 --width 65
+
+
+}
+
+
+# FIND IN NOTES
+function _find_notes() {
+  SEARCH=${1:?"No input given. What would you like to find?"}
+
+  find $DEVNOTES_PATH \( -path *node_modules -o -path *.git \) -prune -o \
+    -type f \
+    -printf "%P\n" \
+    | sort --version-sort \
+    | grep --color $SEARCH
+}
+
+
+function _search_notes() {
+  find $DEVNOTES_PATH \( -path *node_modules -o -path *.git \) -prune \
+    -o \
+    -type f \
+    -exec grep \
+      -H \
+      --color=always \
+      --no-messages \
+      --before-context=2 \
+      --after-context=3 \
+      "$1" {} \;
+}
+
+
+function _new_note() {
+  TIMESTAMP="$(date +'%Y%m%d_%H%M%S')"
+  NAME=${1:="DevNote_\$TIMESTAMP"}
+  command gedit --new-window --new-document "$DEVNOTES_PATH/$NAME" 2&>1 &
+
+  if [ -f "$DEVNOTES_PATH/$NAME" ]; then
+    echo "Error: A file with that name exists"
+  else
+    command gedit --new-window --new-document "$DEVNOTES_PATH/$NAME" 2&>1 &
+  fi
+}
+
+
+function _edit_note() {
+  NAME=${1:?'No note specified'}
+  if [ -f "$DEVNOTES_PATH/$NAME" ]; then
+    command gedit --new-window "$DEVNOTES_PATH/$NAME" 2&>1 &
+  else
+    echo "Note not found"
+  fi
+}
+
+function _edit_note_cli() {
+  NAME=${1:?"No note specified"}
+
+  if [ -f "$DEVNOTES_PATH/$NAME" ]; then
+    command $EDITOR "$DEVNOTES_PATH/$NAME"
+  else
+    echo "Note not found"
+  fi
+}
+
+
+
+alias notes.goto="command pushd $DEVNOTES_PATH"
+alias notes.list="_list_notes"
+alias notes.find="_find_notes"
+alias notes.new="_new_note"
+alias notes.edit="_edit_note"
+alias notes.edit_cli="_edit_note_cli"
+alias notes.open.typora="gtk-launch typora $DEVNOTES_PATH"
+alias notes.open.boost="gtk-launch boostnote"
+
+

@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # =============================================================================
-#  
+# # GNOME-SHELL / GNOME SESSION SHORTCUTS
 # =============================================================================
-# Add a short description
+# Getting around a little quicker on gnome based systems
+# Provides some reminder shortcuts to easily forgotten builtin
+# helper scripts
 # -----------------------------------------------------------------------------
-

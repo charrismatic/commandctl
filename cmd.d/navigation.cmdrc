@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# =============================================================================
+# 1. BASH BASICS
+# =============================================================================
+# NAVIGATION
+# -----------------------------------------------------------------------------
+
+
+# SHOW FOLDER CONTENTS WHEN CHANGING DIRECTORY
+function cd () {
+  builtin cd $1
+  ls -l \
+    --color \
+    --human-readable \
+    --time-style="+%m-%d %H:%M" \
+    --no-group \
+    --sort=version \
+    --group-directories-first \
+    --ignore-backups
+}
+
+
+# GO BACK TO THE LAST DIRECTORY
+function  back () {
+  last_dir="$(ls -Frt | grep '/$' | tail -n1)"
+  if [ -d "$last_dir" ]; then
+     cd "$last_dir"
+  fi
+}
+
+
+
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+
+alias goto="source /data/0/bin/goto"
+
+
+

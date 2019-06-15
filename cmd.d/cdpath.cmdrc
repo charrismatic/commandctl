@@ -96,29 +96,3 @@ function __favdirs_compl() {
 
 alias _cd='cd'
 complete -F __favdirs_compl _cd
-
-# ------------------------------------
-# favdirs
-# ------------------------------------
-# Within the last two lines, an alias to change the current directory (with autocompletion) is created. With this alias (_cd) you are able to change to one of your favorite directories. May you wan't to change this alias to something which fits your needs.
-# With the function favdirs you can manage your favorites (see usage).
-# Manage favorite folders.
-# usage: favdirs [ list | load | save | add | del ]
-#  list : list favorite folders
-#  load : load favorite folders from ~/.favdirs
-#  save : save favorite directories to ~/.favdirs
-#  add  : add directory to favorites [default pwd /tmp ].
-#  del  : delete directory from favorites [default pwd /tmp ].
-# ------------------------------------
-#lso, have a look at CDPATH
-# colon-separated list of search paths available to the cd command, similar in function to the
-##ATH variable for binaries. The $CDPATH variable may be set in the local ~/.bashrc file.
-#bash$ cd bash-doc
-#bash: cd: bash-doc: No such file or directory
-#bash$ CDPATH=/usr/share/doc
-#bash$ cd bash-doc
-#/usr/share/doc/bash-doc
-#bash$ echo $PWD
-#/usr/share/doc/bash-doc
-#and
-#cd -

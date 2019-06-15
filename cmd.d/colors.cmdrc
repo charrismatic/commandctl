@@ -1,0 +1,159 @@
+#!/bin/bash
+
+# =============================================================================
+# Colors
+# =============================================================================
+# Terminal color formatting utilities
+# -----------------------------------------------------------------------------
+
+_color_escapes_list () {
+
+  echo -e "# ======================
+  [FORMATTING]
+
+  RESET  \\\033[0m  \033[0mRESET\033[0m
+  BOLD   \\\033[1m\033[22m  \033[1m\033[22BOLD\033[0m
+  ITLC   \\\033[3m\033[23m  \033[3m\033[23ITLC\033[0m
+  UNDR   \\\033[4m\033[24m  \033[4m\033[24UNDR\033[0m
+  INVR   \\\033[7m\033[27m  \033[7m\033[27INVR\033[0m
+
+  [FG COLORS]
+
+  BLK  \\\033[00;30m  \033[00;30mBLK\033[0m
+  RED  \\\033[00;31m  \033[00;31mRED\033[0m
+  GRN  \\\033[00;32m  \033[00;32mGRN\033[0m
+  YEL  \\\033[00;33m  \033[00;33mYEL\033[0m
+  BLU  \\\033[00;34m  \033[00;34mBLU\033[0m
+  MAG  \\\033[00;35m  \033[00;35mMAG\033[0m
+  CYN  \\\033[00;36m  \033[00;36mCYN\033[0m
+  WHT  \\\033[00;37m  \033[00;37mWHT\033[0m
+
+  [BOLD]
+
+  LTBLK   \\\033[01;30m  \033[01;30mLTBLK\033[0m
+  LTRED   \\\033[01;31m  \033[01;31mLTRED\033[0m
+  LTGRN   \\\033[01;32m  \033[01;32mLTGRN\033[0m
+  LTYEL   \\\033[01;33m  \033[01;33mLTYEL\033[0m
+  LTBLU   \\\033[01;34m  \033[01;34mLTBLU\033[0m
+  LTMAG   \\\033[01;35m  \033[01;35mLTMAG\033[0m
+  LTCYN   \\\033[01;36m  \033[01;36mLTCYN\033[0m
+  LTWHT   \\\033[01;37m  \033[01;37mLTWHT\033[0m
+
+  [BG COLORS]
+  BGBLK   \\\033[00;40;37m  \033[00;40;37mBGBLK\033[0m
+  BGRED   \\\033[00;41;37m  \033[00;41;37mBGRED\033[0m
+  BGGRN   \\\033[00;42;30m  \033[00;42;30mBGGRN\033[0m
+  BGYEL   \\\033[00;43;30m  \033[00;43;30mBGYEL\033[0m
+  BGBLU   \\\033[00;44;37m  \033[00;44;37mBGBLU\033[0m
+  BGMAG   \\\033[00;45;30m  \033[00;45;30mBGMAG\033[0m
+  BGCYA   \\\033[00;46;30m  \033[00;46;30mBGCYA\033[0m
+  BGWHT   \\\033[00;47;30m  \033[00;47;30mBGWHT\033[0m
+
+  [BG + BOLD FG]
+  BGLTBLK   \\\033[01;40;37m  \033[01;40;37m  GLTBLK\033[0m
+  BGLTRED   \\\033[01;41;37m  \033[01;41;37m  GLTRED\033[0m
+  BGLTGRN   \\\033[01;42;37m  \033[01;42;37m  GLTGRN\033[0m
+  BGLTYEL   \\\033[01;43;37m  \033[01;43;37m  GLTYEL\033[0m
+  BGLTBLU   \\\033[01;44;37m  \033[01;44;37m  GLTBLU\033[0m
+  BGLTMAG   \\\033[01;45;37m  \033[01;45;37m  GLTMAG\033[0m
+" | sed 's/\=/   /'
+
+}
+
+_clr () {
+
+  COLOR=${1:-"RESET"}
+  MSG=${2:-""}
+  # ======================
+  # FORMATTING
+  #---------------------
+  RESET='\033[0m'
+  BOLD='\033[1m\033[22m'
+  ITLC='\033[3m\033[23m'
+  UNDR='\033[4m\033[24m'
+  INVR='\033[7m\033[27m'
+  #---------------------
+  # FG COLORS
+  #---------------------
+  BLK='\033[00;30m'
+  RED='\033[00;31m'
+  GRN='\033[00;32m'
+  YEL='\033[00;33m'
+  BLU='\033[00;34m'
+  MAG='\033[00;35m'
+  CYN='\033[00;36m'
+  WHT='\033[00;37m'
+  #---------------------
+  # BOLD
+  #---------------------
+  LTBLK='\033[01;30m'
+  LTRED='\033[01;31m'
+  LTGRN='\033[01;32m'
+  LTYEL='\033[01;33m'
+  LTBLU='\033[01;34m'
+  LTMAG='\033[01;35m'
+  LTCYN='\033[01;36m'
+  LTWHT='\033[01;37m'
+  #---------------------
+  # BG COLORS
+  #---------------------
+  BGBLK='\033[00;40;37m'
+  BGRED='\033[00;41;37m'
+  BGGRN='\033[00;42;30m'
+  BGYEL='\033[00;43;30m'
+  BGBLU='\033[00;44;37m'
+  BGMAG='\033[00;45;30m'
+  BGCYA='\033[00;46;30m'
+  BGWHT='\033[00;47;30m'
+  #---------------------
+  # BG + BOLD FG
+  #---------------------
+  BGLTBLK='\033[01;40;37m'
+  BGLTRED='\033[01;41;37m'
+  BGLTGRN='\033[01;42;37m'
+  BGLTYEL='\033[01;43;37m'
+  BGLTBLU='\033[01;44;37m'
+  BGLTMAG='\033[01;45;37m'
+
+  if [ -z "$MSG" ]; then
+    echo -en "${!COLOR}"
+  else
+    echo -en "${!COLOR} $MSG ${RESET}"
+  fi
+}
+
+
+function color_test_16() {
+  #Background
+  for clbg in {40..47} {100..107} 49 ; do
+    #Foreground
+    for clfg in {30..37} {90..97} 39 ; do
+      #Formatting
+      for attr in 0 1 2 4 5 7 ; do
+        #Print the result
+        echo -en "\e[${attr};${clbg};${clfg}m ^[${attr};${clbg};${clfg}m \e[0m"
+      done
+      echo #Newline
+    done
+  done
+}
+
+function color_test_256() {
+    # Foreground / Background
+    for fgbg in 38 48 ; do
+        for color in {0..255} ; do # Colors
+            # Display the color
+            printf "\e[${fgbg};5;%sm  %3s  \e[0m" $color $color
+            # Display 6 colors per lines
+            if [ $((($color + 1) % 6)) == 4 ] ; then
+                echo # New line
+            fi
+        done
+        echo # New line
+    done
+}
+
+alias colors.get_code="_clr"
+alias colors.basic="_color_escapes_list"
+alias colors.matrix16="color_test_16"
+alias colors.matrix256="color_test_256"

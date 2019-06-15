@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# =============================================================================
-# PROCESS UTILITIES - PS, PSTREE, PGREP
-# =============================================================================
-
-pstree.full="pstree --arguments --compact --show-pgid --long --show-pid"

@@ -6,7 +6,9 @@ alias cache_off="php -d memory_limit=2048M -f /vagrant/public/bin/magento cache:
 alias cache_on="php -d memory_limit=2048M -f /vagrant/public/bin/magento cache:enable"
 alias composer_install="/usr/local/bin/ea-php70 -d allow_url_fopen=1 /opt/cpanel/composer/bin/composer install"
 alias deploy_content="magento setup:static-content:deploy --refresh-content-version-only"
-alias dump_config="magerun app:config:dump > /vagrant/mount/export/config/.mage_config && extract /vagrant/public/app/etc/env.php && extract /vagrant/public/app/etc/config.php;" ;
+alias dump_config="magerun app:config:dump > /vagrant/mount/export/config/.mage_config && \
+  extract /vagrant/public/app/etc/env.php && \
+  extract /vagrant/public/app/etc/config.php;" ;
 alias dump_db='magerun db:dump -vvv --add-time="suffix" --strip="@development" /vagrant/mount/export/db'
 alias dump_media="magerun db:dump --add-time=suffix/vagrant/mount/export/db/mage2_db"
 alias gen="php -d memory_limit=2048M -f /vagrant/public/bin/mg2-codegen.phar"

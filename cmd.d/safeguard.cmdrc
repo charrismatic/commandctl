@@ -2,9 +2,16 @@
 
 # CHECK ENV
 # MAKE SURE ALIASES ARENT EXPORTED TO PRODUCTION SERVERS ON ACCIDENT
-
 # if [ $WORKING_ENV == "local" ]; then
   # overwrite and include some basic safety mechanisms for dangerous commands
   # unalias "";
   # alias = ""
 # fi
+
+
+alias sudoi='sudo -i'
+alias su='sudo -i'
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
+

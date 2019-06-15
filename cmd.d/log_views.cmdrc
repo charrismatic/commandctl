@@ -1,69 +1,97 @@
 #!/bin/bash
 
-THISPATH=$ZEROCMDPATH/cmd.d/log_views.cmdrc
-# /----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
 # SYSADMIN: JOURNAL AND LOGS
 # -----------------------------------------------------------------------------
 
-alias j="journalctl --pager-end --all"
-alias jl.end="journalctl --all --pager-end"
-alias jl.cat="journalctl --all --no-pager"
-alias jl.now="journalctl --merge --pager-end --catalog --no-hostname --utc --since -1d"
-alias jl.more="journalctl --merge --pager-end --catalog --no-hostname --utc --since -10d"
-alias jl.10min="journalctl --merge --no-hostname --full --all --pager-end --since -10min"
-alias jl.1day="journalctl --merge --no-hostname --full --all --pager-end --since -1day"
-alias jl.1hr="journalctl --merge --no-hostname --full --all --pager-end --since -1hr"
-alias jl.30min="journalctl --merge --no-hostname --full --all --pager-end --since -30min"
-alias jl.follow="journalctl --merge --follow --no-hostname"
-alias jl.grep.all="journalctl --all --full --no-pager | grep --ignore-case --color"
-alias jl.grep.today="journalctl --merge --no-pager --no-hostname --since -7d | grep --ignore-case --color"
-alias jl.grep="journalctl --merge --no-pager --no-hostname | grep -gnore-case --color"
-alias jl.search="journalctl --merge --no-pager --no-hostname --since -7d | grep -i --color"
-alias jl.since="journalctl --merge --no-hostname --full --all --pager-end --since"
-alias jl.today="journalctl --pager-end --no-hostname --full --all --since today"
-alias jl.short.log="journalctl --merge --reverse --catalog --no-hostname --utc --output-fields=\"CODE_FILE\",\"CODE_LINE\",\"PRIORITY\",\"MESSAGE\" --output short"
-alias jl.short.stream="journalctl --follow --merge --catalog --no-hostname --utc --output-fields=\"CODE_FILE\",\"CODE_LINE\",\"PRIORITY\",\"MESSAGE\" --output short"
-alias jl.micro.log="journalctl --merge --reverse --catalog --no-hostname --output cat"
-alias jl.micro.stream="journalctl --follow --merge --catalog --no-hostname --output cat"
-alias jl.log.atom="journalctl SYSLOG_IDENTIFIER=atom.desktop --merge --follow --no-hostname"
-alias jl.log.dropbox="journalctl SYSLOG_IDENTIFIER=dropbox.desktop --merge --follow --no-hostname"
-alias jl.log.docker="journalctl SYSLOG_IDENTIFIER=dockerd --merge --follow --no-hostname"
-alias log.tail="find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
-alias log.tail.short="journalctl --merge --catalog --no-full --no-hostname --output cat --follow"
-alias log.tail.long="--merge --follow --catalog --no-hostname --full --all --no-tail"
+# The system journal has a lot of functions. It can be difficult to navigate when
+# you need to find something quickly or if you need want to make you you regularly
+# check the right places. The main goal of the following group of commands is to
+# have a well known set of easy to remember configurations of the journal tool
+# that will allow you to use the tool more often and with more purpsose. (Instead
+# of messing aroud in the man pages and help menu each time you need to find a
+# simple error or message.
 
 
 
+THISPATH=$ZEROCMDPATH/cmd.r/log_views.cmdrc
+# --no-pager
+LOG_NOHOST="--no-hostname "
+LOG_ALLJOURNALS="--merge"
+LOG_ALLFIELDS="--all"
+LOG_FULLTEXT="--full"
+LOG_SHORTEN="--no-full"
+LOG_END="--pager-end "
+LOG_CAT="--no-pager "
+LOG_TOP="--reverse "
+LOG_ONEWEEK="--since -7d"
+LOG_ONEDAY="--since -1d"
+LOG_COMPLETE="--full --all --merge "
+LOG_TAIL="--follow"
+JOURNAL_SHORT_OUTPUT_FIELDS="\"CODE_FILE\",\"CODE_LINE\",\"PRIORITY\",\"MESSAGE\""
+LOG_FORMAT_SHORT="--no-full --no-hostname --merge --output short --output-fields=\"CODE_FILE\",\"CODE_LINE\",\"PRIORITY\",\"MESSAGE\""
+LOG_FORMAT_MICRO="--no-full --no-hostname --merge --output cat"
+LOG_FORMAT_PRIORITY="--merge --pager-end --no-hostname --since -7d"
 
+alias jl="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END"
+alias jl.end="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END"
+alias jl.cat="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_CAT"
+alias jl.tail="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_TAIL"
 
+alias jl.since="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END --since"
+alias jl.now="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END --since -10min"
+alias jl.30mn="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END --since -30min"
+alias jl.1h="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END --since -1hr"
+alias jl.1d="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END --since -1d"
+alias jl.10d="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END --since -10d"
+alias jl.30d="journalctl ${LOG_COMPLETE} $LOG_NOHOST $LOG_END --since -30d"
 
+alias jl.shortlog.log="journalctl $LOG_FORMAT_SHORT --pager-end"
+alias jl.shortlog.cat="journalctl $LOG_FORMAT_SHORT --no-pager"
+alias jl.shortlog.tail="journalctl $LOG_FORMAT_SHORT --follow"
+
+alias jl.microlog.log="journalctl $LOG_FORMAT_MICRO --pager-end"
+alias jl.microlog.cat="journalctl $LOG_FORMAT_MICRO --no-pager"
+alias jl.microlog.tail="journalctl $LOG_FORMAT_MICRO --follow"
+
+alias jl.lvl-0="journalctl $LOG_FORMAT_PRIORITY PRIORITY=0"
+alias jl.lvl-1="journalctl $LOG_FORMAT_PRIORITY PRIORITY=1"
+alias jl.lvl-2="journalctl $LOG_FORMAT_PRIORITY PRIORITY=2"
+alias jl.lvl-3="journalctl $LOG_FORMAT_PRIORITY PRIORITY=3"
+alias jl.lvl-4="journalctl $LOG_FORMAT_PRIORITY PRIORITY=4"
+alias jl.lvl-5="journalctl $LOG_FORMAT_PRIORITY PRIORITY=5"
+alias jl.lvl-6="journalctl $LOG_FORMAT_PRIORITY PRIORITY=6"
+alias jl.lvl-7="journalctl $LOG_FORMAT_PRIORITY PRIORITY=7"
+
+alias jl.tail.long="journalctl $LOG_ALLJOURNALS $LOG_TAIL --catalog --no-hostname --full --all --no-tail"
+alias jl.grep="journalctl ${LOG_COMPLETE} $LOG_CAT $LOG_NOHOST | grep -i --color"
+alias jl.grep.today="journalctl ${LOG_COMPLETE} $LOG_CAT $LOG_NOHOST $LOG_ONEWEEK | grep -i --color"
+alias jl.grep.week="journalctl ${LOG_COMPLETE} $LOG_CAT $LOG_NOHOST $LOG_ONEWEEK | grep -i --color"
+
+alias jl.search="journalctl ${LOG_COMPLETE} $LOG_CAT $LOG_NOHOST --since -7d | grep -i --color"
 alias jle="journalctl --all --pager-end"
 alias jlf="journalctl --merge --follow --no-hostname"
 
-alias jl.lvl0="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=0"
-alias jl.lvl1="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=1"
-alias jl.lvl2="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=2"
-alias jl.lvl3="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=3"
-alias jl.lvl4="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=4"
-alias jl.lvl5="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=5"
-alias jl.lvl6="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=6"
-alias jl.lvl7="journalctl -x -e --merge --pager-end --catalog --no-hostname --utc --since -7d  --no-pager PRIORITY=7"
+alias jl.atom="journalctl SYSLOG_IDENTIFIER=atom.desktop --no-hostname --since -7d"
+alias jl.docker="journalctl SYSLOG_IDENTIFIER=dockerd --no-hostname --since -7d"
+alias jl.dropbox="journalctl SYSLOG_IDENTIFIER=dropbox.desktop  --no-hostname --since -7d"
+alias jl.dropbox="journalctl SYSLOG_IDENTIFIER=dpkg --no-hostname --since -30d"
 
-alias jl.pid="journalctl --no-hostname --full --all _PID="
-
+## -- work in progress
+#alias log.tail="find /var/log -type f -exec file {} \; | grep 'text' | cut -d ' ' -f1 | sed -e's/:$//g' | grep -v \"[0-9]$" | xargs tail -f"
+alias jl.pid="journalctl $LOG_NOHOST $LOG_FULLTEXT $LOG_ALLFIELDS $LOG_ALLJOURNALS _PID="
 alias jl.stat_example="echo -e \"Environment Variables:\n  _COMM=atom \n  _CMDLINE=/usr/share/atom/atom\n  _EXE=/usr/share/atom/atom\n  SYSLOG_IDENTIFIER=atom.desktop\""
 alias jl.stat_files="journalctl --field=CODE_FILE --root=/"
 alias jl.stat_head="journalctl --header"
-alias jl.stat_nice="sudo journalctl --merge --reverse --catalog  --utc --field=\"CODE_FILE\",\"CODE_LINE\",\"PRIORITY\",\"MESSAGE\" --output short"
+alias jl.stat_nice="sudo journalctl --merge --reverse --catalog  --utc --field=$JOURNAL_SHORT_OUTPUT_FIELDS --output short"
 alias jl.stat_shrink="journalctl --vacuum-size=512M"
 alias jl.stat_size="journalctl --disk-usage"
-
-alias jl.unit="journalctl --merge --pager-end --full --catalog --no-hostname --utc --since -1d --unit"
-alias jl.user_units="journalctl --no-hostname --full --all --user-unit"
+alias jl.unit="journalctl --merge --pager-end --full --catalog --no-hostname --utc --unit"
+alias jl.unit.user="journalctl --no-hostname --full --all --user-unit"
+alias log.verbose="journalctl -x -e --merge --pager-end --no-pager --lines 1 --no-hostname --output verbose --output-fields=\"MESSAGE,_PID,_UID,_GID,_AUDIT_SESSION,_AUDIT_LOGINUID,_SYSTEMD_OWNER_UID,_SYSTEMD_UNIT,_SYSTEMD_SLICE,_SYSTEMD_USER_SLICE,_TRANSPORT,PRIORITY,_COMM,_EXE,_CMDLINE,_SYSTEMD_CGROUP,_SYSTEMD_USER_UNIT,SYSLOG_IDENTIFIER\""
 alias kern_log="tail -f /var/log/kern.log"
 alias sys_log="tail -f /var/log/syslog"
 alias unit_log="journalctl --merge --pager-end --full --catalog --no-hostname --utc --since -1d --unit"
-alias log.verbose="journalctl -x -e --merge --pager-end --no-pager --lines 1 --no-hostname --output verbose --output-fields=\"MESSAGE,_PID,_UID,_GID,_AUDIT_SESSION,_AUDIT_LOGINUID,_SYSTEMD_OWNER_UID,_SYSTEMD_UNIT,_SYSTEMD_SLICE,_SYSTEMD_USER_SLICE,_TRANSPORT,PRIORITY,_COMM,_EXE,_CMDLINE,_SYSTEMD_CGROUP,_SYSTEMD_USER_UNIT,SYSLOG_IDENTIFIER\""
 alias comm_log="journalctl --merge --pager-end --catalog --no-hostname --utc --since -1"
 alias dbus_warnlog="journalctl /usr/bin/dbus-daemon --no-hostname --output cat --priority 4"
 alias dmesg="dmesg --decode --facility=kern,user,daemon,syslog --syslog -t --time-format=iso --userspace --human"
@@ -75,4 +103,3 @@ alias errorlog="journalctl --merge --pager-end --catalog --no-hostname --all --s
 # -----------------------------------------------------------------------------
 # SYSADMIN: JOURNAL AND LOG WATCHERS
 # -----------------------------------------------------------------------------
-
