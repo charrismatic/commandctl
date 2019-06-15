@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# =============================================================================
+#  MATT HARRIS
+#  m@ttHarri.is
+#  11/14/2017, 12:01:19 PM
+# =============================================================================
+
+# Whereis extended info
+whichmore () {
+  which $1 | xargs ls -la
+}
+
+
+# TOP 20 FOLDERS FROM PATH  BY TOTAL SIZE
+biggest () {
+  COUNT=${1:-20}
+  du --block-size=M ${COUNT} | sort -n -r | head -n 20
+}
+
+
+# /----------------------------------------------------------------------------
+# PROCESSES
+# -----------------------------------------------------------------------------
+# PROCESSES
+function psgrep () {
+    #  --signal signal
+    #  --list-name
+    #  --list-full
+    ps -ef | {
+        read -r;
+        echo "$REPLY";
+        grep --color=auto "$@"
+    }
+}
+
+## ALTERNATE VERSION
+# alias psgrep="ps aux | grep -v grep | grep --color -i"
+
+alias env.1="env"
+alias env.all="decalre p"
+alias ls.functions="set"
+alias aliases="aliases"
+alias ls.aliases="aliases"
+alias mank="man -k"
+alias lessfind="less -a"
+alias histgrep="history | cut -c 8- | sort | grep --color"
+alias gp.commands="man -k"
+alias gp.history="history | cut -c 8- | sort | grep --color"

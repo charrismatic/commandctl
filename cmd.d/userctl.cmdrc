@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## see:   getent nss nsswitch.conf
+
 # @alias ~/bin/lsusrs
 
 list_system_users () {
@@ -25,3 +25,4 @@ list_sytsem_information () {
 alias ls.users="list_system_users"
 alias ls.groups="list_sytem_groups"
 alias ls.system="list_sytsem_information"
+

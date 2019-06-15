@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# =============================================================================
+# - PROCESSES
+# =============================================================================
+# Aliases and functions for ps, pstree, pgrep and other process commands
+# ----------------------------------------------------------------------------
+
+#PTREE_PIDS=""
+
+_ps_tree () {
+  if [ $PTREE_PIDS == "" ]; then
+    echo "No process pids added to the tree yet."
+    echo "Set the process pids you want to see with the'PTREE_PID' env variable"
+
+    command ps nwSf o pid,ppid,tty,pmem,pcpu,command
+  else
+    command ps nwSf o pid,ppid,tty,pmem,pcpu,command --pid $PTREE_PIDS --ppid $PTREE_PIDS
+
+  fi
+}
+_ps_tree_env () {
+  if [ $PTREE_PIDS == "" ]; then
+    echo "No process pids added to the tree yet."
+    echo "Set the process pids you want to see with the'PTREE_PID' env variable"
+
+    command ps nwSf e o pid,ppid,tty,pmem,pcpu,command
+  else
+    command ps nwSf e o pid,ppid,tty,pmem,pcpu,command \
+      --pid $PTREE_PIDS \
+      --ppid $PTREE_PIDS \
+      | sed -E 's/^\s*/|/g; s/^|[`-|]/-/g  ; s/,/  /g'
+
+  fi
+}
+_ps_tree_add () {
+  ADD_PIDS="$(1-?No input give, no pids were added)"
+  PTREE_PIDS="$PTREE_PIDS,$ADD_PIDS"
+}
+
+_ps_get_pid_list () {
+  CMD="${1:?Enter a process name}"
+  echo $(pgrep -d "," $CMD)
+}
+
+
+_ps_command () {
+  CMD="${1:?Enter a process name}"
+  PID_LIST="$(pgrep -d \",\" $CMD)"
+
+  ps nwSc --pid $PID_LIST --ppid $PID_LIST
+}
+
+
+alias ps.tree="_ptree"
+alias ps.tree.add_branch="_ptree_add"
+alias ps.tree.reset="unset PTREE_PIDS"
+alias ps.env_tree="_ptree_env"
+alias ps.list_pids="_get_pid_list"
+alias ps.cmd="_ps_command"
+alias ps.cmd_threads="ps H -C"
+alias ps.threads="ps Swm -O ppid,pmem,pcpu,majflt,rss,stat"
+alias ps.signal="ps Swm -o sig,sig_ignore,sig_block,sig_catch,pid,ppid,sess,pri,pmem,pcpu,majflt,rss,stat,command,flag "
+alias ps.ls="ps nwSfe -O ppid,pmem,pcpu,majflt,rss,stat"
+alias ps.lsc="ps nwSfe -O ppid,pmem,pcpu,majflt,rss,stat"

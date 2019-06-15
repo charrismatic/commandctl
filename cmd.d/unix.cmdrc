@@ -1,25 +1,21 @@
 #!/bin/bash
 
 # =============================================================================
-# 1. BASH BASICS
+# NAME: BASH BASICS
 # =============================================================================
 # /----------------------------------------------------------------------------
 # FILESYSTEM: CONTROL
 # -----------------------------------------------------------------------------
-alias rm="rm --interactive=once --dir --verbose"
-alias rrm="sudo rm -rf"
-alias rmrf="sudo rm -rf"
+alias rm="rm --preserve-root --interactive=once --dir --verbose"
+alias rmrf="sudo rm --preserve-root --interactive=once -rf"
 alias cp="cp --interactive --preserve --verbose"
 alias cp_new="cp --interactive --preserve --update --verbose"
 alias mv="mv --interactive --verbose"
-alias mv.new="mv --interactive --update --verbose"
+alias mv_new="mv --interactive --update --verbose"
 alias mkdir="mkdir -pv"
-alias chown="chown --preserve-root"
-alias chmod="chmod --preserve-root"
-alias chgrp="chgrp --preserve-root"
-alias mkdir="mkdir -pv"
+alias chmod="chmod --changes --preserve-root"
 
-# /----------------------------------------------------------------------------
+# /---------------------------------------------------------------------------
 # FILESYSTEM: CHANGES
 # -----------------------------------------------------------------------------
 alias diffy="diff --color --ignore-all-space --ignore-blank-lines --side-by-side --suppress-common-lines --recursive --exclude=*.git/*"
@@ -40,35 +36,76 @@ alias free="free -ht"
 # /----------------------------------------------------------------------------
 # PACKAGES\
 # -----------------------------------------------------------------------------
+# SEARCH APT-CACHE WITH HIGHLIGHTING
+function apt_grep () {
+  IGNORE="lib*"
+  SEEK=$1
+  apt-cache search $SEEK | sort | grep -v $IGNORE  | grep --color $SEEK
+}
+
+
+alias apt.i="sudo apt-get install"
+alias apt.u="sudo apt-get update && apt-get upgrade -y"
 alias apt.install="sudo apt-get install"
 alias apt.update="sudo apt-get update"
+alias apt.upgrade="sudo apt-get upgrade"
+
 alias apt.show="apt show"
-alias apt.search="apt-grep"    # <- is custom function
-alias aptgrep="apt-cache search $1 | grep -v $GREP_IGNORE  | grep $1 --color "    # <- is custom function
+alias apt.search="apt_grep"
+alias search="apt_grep"
+alias aptgrep="apt_grep"
 
 # /----------------------------------------------------------------------------
 # EDITORS --wordchars= --linenumbers --autoindent --rebinddelete --tabsize=2 --nowrap
 # -----------------------------------------------------------------------------
 alias edit="nano --syntax=shell --wordbounds --atblanks --unix --smooth --smarthome --suspend  --tabstospaces"
 
-# /----------------------------------------------------------------------------
-#  ARCHIVES
-# -----------------------------------------------------------------------------
-alias peek.tar="tar -tvf"
-alias peek.tar_gz="tar -ztvf"
-alias peek.tar_bz2="ta -jtvf"
-alias how_to_unzip_this="echo type extract"
 
 # /----------------------------------------------------------------------------
 # MISC
 # -----------------------------------------------------------------------------
 alias timestamp="date +'%y%m%d.%H%M%S'"
 alias datestamp="date +'%Y-%m-%d %H:%M:%S'"
-alias screenfix="echo -e "\033c""
-## alias screenfix="reset"
-## /----------------------------------------------------------------------------
 
-## REVERSE ENGINEERING
+
+alias bookmarks="buku"
+alias b="buku"
+alias b.add="buku -a"
+alias b.search="buku -s"
+alias b.list=" buku -p"
+
+
+_linker_help () {
+  echo -e "\n[Linker] \n\n _linker <destination_dir> <file> <link_name>\n"
+}
+
+
+_linker_relative () {
+  DEST=${1:=?Destination directory missing}
+  ORIGIN=${2:?filename missing}
+  NAME=${3:=$ORIGIN}
+
+  echo "Linking source: $ORIGIN to diretory with name $NAME"
+  ln -s -r "$ORIGIN" $DEST/$NAME
+}
+
+_linker () {
+  DEST=${1:=?Destination directory missing}
+  ORIGIN=${2:?filename missing}
+  NAME=${3:=$ORIGIN}
+
+  echo "Linking source: $ORIGIN to diretory with name $NAME"
+  ln -s "$PWD/$ORIGIN" $DEST/$NAME
+}
+
+alias linker.help="_linker_help"
+alias link2bin="_linker /data/0/bin"
+alias link2app="_linker /data/apps/bin"
+
+
+
+## /----------------------------------------------------------------------------
+## BINARY FILES
 ## -----------------------------------------------------------------------------
 ##strings -w -s " " -e L
 ##strings -w -s " " -e l
@@ -77,5 +114,24 @@ alias screenfix="echo -e "\033c""
 ##strings -w -s " " -e S
 ##strings -w -s " " -e s
 alias stringclean="strings -w -s ' ' -e s"
-alias findcat="find ./ -type f -exec cat {} \;"
-alias findls="find ./ -type f -ls"
+#alias screenfix="echo -e "\033c""
+alias screenfix="reset"
+
+## CLEANUP AND MANGEMENT
+## -----------------------------------------------------------------------------
+CLEANUP_PRINT_FORMAT='%Cm.%Cd.%CY %u (%m) \033[01;33m %M \033[0m %h \033[00;31m %f \033[0m \n'
+CLEANUP_MAX_DEPTH="-maxdepth 20"
+CLEANUP_SORT="sort --numeric-sort --reverse"
+CLEANUP_DUCOMMAND="du --block-size=M -s"
+CLEANUP_TOP="head -n 20"
+alias cleanup.ls.node_modules="find ./ ${CLEANUP_MAX_DEPTH} -type d -path *node_modules -exec ${CLEANUP_DUCOMMAND} {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP} "
+alias cleanup.ls.dirsize.3="find -mindepth 3 -maxdepth 3 -type d -exec \"${CLEANUP_DUCOMMAND}\" {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP}"
+alias cleanup.ls.dirsize.2="find -mindepth 2 -maxdepth 2 -type d -exec \"${CLEANUP_DUCOMMAND}\" {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP}"
+alias cleanup.ls.dirsize.1="find -mindepth 1 -maxdepth 1 -type d -exec \"${CLEANUP_DUCOMMAND}\" {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP}"
+alias cleanup.ls.files.exe="find ./ ${CLEANUP_MAX_DEPTH} -type f -executable -printf \"${CLEANUP_PRINT_FORMAT}\""
+alias cleanup.ls.files.644="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 644 -printf \"${CLEANUP_PRINT_FORMAT}\""
+alias cleanup.ls.files.664="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 664 -printf \"${CLEANUP_PRINT_FORMAT}\""
+alias cleanup.ls.files.646="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 666 -printf \"${CLEANUP_PRINT_FORMAT}\""
+alias cleanup.ls.files.755="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 755 -printf \"${CLEANUP_PRINT_FORMAT}\""
+alias cleanup.ls.files.777="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 777 -printf \"${CLEANUP_PRINT_FORMAT}\""
+alias cleanup.ls.files.444="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 444 -printf \"${CLEANUP_PRINT_FORMAT}\""
