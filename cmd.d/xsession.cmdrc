@@ -1,8 +1,0 @@
-#!/bin/bash
-# FOR USE ON LOCAL DESKTOP SESSIONS
-# PERSONAL COMPUTER, LAPTOPS, THINGS WITH X SESSION
-
-
-##  APPLICATIONS
-# alias open="nohup nautilus . &"
-alias open="nautilus --no-desktop ."

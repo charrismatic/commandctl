@@ -1,7 +1,58 @@
 #!/bin/bash
 
+
+_serve_js () {
+  SERVE_PORT=${1:-5000}
+  SERVE_PATH=${2:-.}
+  echo "Serving files from $SERVE_PATH on http://localhost:$SERVE_PORT via node serve"
+
+  /usr/bin/google-chrome "http://localhost:$SERVE_PORT" 2&> /dev/null
+  /home/icarus/node_modules/.bin/serve --no-clipboard --single --listen $SERVE_PORT
+}
+
+
+_serve_php () {
+  SERVE_PORT=${1:-5000}
+  SERVE_PATH=${2:-.}
+
+  echo "Serving files from $SERVE_PATH on http://localhost:$SERVE_PORT"
+
+  /usr/bin/google-chrome http://localhost:$SERVE_PORT 2&> /dev/null
+  /usr/bin/php -S localhost:$SERVE_PORT -t $SERVE_PATH
+}
+
+
+# ---------------------------------
+# - WEB.OPS - SERVING CONTENT
+# -----------------------------------
+alias serve.js="_serve_js"
+alias serve.php="_serve_php"
+alias phpserve="php -S localhost:5000 -t ."
+
+# -----------------------------------
+# - README
+# -----------------------------------
+alias readme.template.clone="git clone https://gist.github.com/aabf5ea8ab215f40308dc4dde95d7472.git"
+alias readme.template.get="curl https://gist.githubusercontent.com/charrismatic/aabf5ea8ab215f40308dc4dde95d7472/raw/6dc29cc6ac9ba259a0c946edc6071dcb99a9549f/AAA_README.example.md"
+alias readme.generate="readme-generator"
+alias readme="find ./ -maxdepth 1 -iname readme.* -exec mdless {} \;"
+
+# -----------------------------------
+# - PACKAGE.JSON
+# -----------------------------------
+alias package="find ./ -maxdepth 1 -iname package.json -exec pygmentize -l sh {} \; | less -S"
+
+# -----------------------------------
+# - FRONTEND
+# -----------------------------------
+alias sass="node-sass --output-style expanded"
+alias sass.compact="node-sass --output-style compact"
+alias sass.min="node-sass --output-style compressed"
+alias sortv="sort --version-sort"
+alias beautify="js-beautify --indent-size 2 --brace-style expand"
+
 # -----------------------------------------------------------------------------
-alias composer="~/bin/composer"
+#alias composer="~/bin/composer"
 alias wp="~/bin/wp"
 alias laravel="php artisan"
 
@@ -9,8 +60,16 @@ alias laravel="php artisan"
 alias lecrypt_logs_view="less /var/log/letsencrypt/letsencrypt.log"
 alias lecrypt_certs_list="sudo ls /etc/letsencrypt/live/"
 
-# ---------------------------------
-# - WEB.OPS - SERVING CONTENT
+alias match.ipaddress="grep --color=always -E \"[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\""
+
+
 # -----------------------------------
-alias phpserve="php -S localhost:8001 -t ."
-alias web="cd /var/www"
+# - NPM
+# -----------------------------------
+alias npm.i="pnpm install"
+alias npm.home="npm home"
+alias npm.repo="npm repo"
+alias npm.outdated="pnpm outdated"
+alias npm.shrinkwrap="pnpm outdated"
+alias npm.run="npm run"
+alias nmon="nodemon"
