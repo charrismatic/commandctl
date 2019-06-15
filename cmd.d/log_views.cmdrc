@@ -1,6 +1,6 @@
 #!/bin/bash
 
-THISPATH=$LIB0_CMDPATH/cmd.d/log_views.cmdrc
+THISPATH=$ZEROCMDPATH/cmd.d/log_views.cmdrc
 # /----------------------------------------------------------------------------
 # SYSADMIN: JOURNAL AND LOGS
 # -----------------------------------------------------------------------------

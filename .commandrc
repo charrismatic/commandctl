@@ -1,77 +1,82 @@
 #!/bin/bash
 
 # =============================================================================
-#  MATT HARRIS
-#  m@ttHarri.is
-#  11/14/2017, 12:01:19 PM
+#  MATT HARRIS m@ttHarr.is
+#  6/15/2019, 12:55:21 PM
 # =============================================================================
+# shellcheck disable=SC1090
 
+export CMD_MOD_DIR=cmd.d
+export CMD_MOD_EXT=cmdrc
+export COMMANDCTL_INDEX=.commandrc
+export COMMANDCTL_PATH="$ZERO_SHELL/$CMD_MOD_DIR"
+export COMMANDCTL_INDEX_PATH="$ZERO_SHELL/$COMMANDCTL_INDEX"
 
-# LOAD FUNCTIONS FIRST - SOME ALIASES REFERENCE THEM
-
-
-#unset COMMANDCTL_PATH
-
-COMMOD_DIR=cmd.d
-COMMOD_EXT=cmdrc
-COMMANDCTL_INDEX=.commandrc
-export COMMANDCTL_PATH=$LIB0_SHELLPATH/$COMMOD_DIR
-export COMMANDCTL_INDEX_PATH=$LIB0_SHELLPATH/$COMMANDCTL_INDEX 
-
-# COMMAND MODULES 
 # =============================================================================
-
+# COMMANDCTL ALIASES
+# -----------------------------------------------------------------------------
+alias cmctl="commandctl"
+alias cmctl.list="commandctl list"
+alias cmctl.info="commandctl info"
+alias cmctl.help="commandctl help"
+alias cmctl.goto="commandctl goto"
+alias cmctl.show="commandctl show"
+alias cmctl.edit="commandctl edit"
+alias cmctl.search="commandctl search"
+alias cmctl.reload="commandctl reload"
+# =============================================================================
+# COMMAND MODULES
+# -----------------------------------------------------------------------------
 # @GROUP [UNIX CORE COMMANDS]
 # -----------------------------------------------------------------------------
-source $COMMANDCTL_PATH/archive_extract.$COMMOD_EXT
-source $COMMANDCTL_PATH/cdpath.$COMMOD_EXT
-source $COMMANDCTL_PATH/cdpath.pushpop.$COMMOD_EXT
-source $COMMANDCTL_PATH/list.$COMMOD_EXT
-source $COMMANDCTL_PATH/log_views.$COMMOD_EXT
-source $COMMANDCTL_PATH/path_navigation.$COMMOD_EXT
-source $COMMANDCTL_PATH/search_grep.$COMMOD_EXT
-source $COMMANDCTL_PATH/search_find.$COMMOD_EXT
-source $COMMANDCTL_PATH/system_query.$COMMOD_EXT
-source $COMMANDCTL_PATH/unix.$COMMOD_EXT
-source $COMMANDCTL_PATH/xsession.$COMMOD_EXT
+source $COMMANDCTL_PATH/archives.cmdrc
+source $COMMANDCTL_PATH/less.cmdrc
+source $COMMANDCTL_PATH/list.cmdrc
+source $COMMANDCTL_PATH/log_views.cmdrc
+source $COMMANDCTL_PATH/navigation.cmdrc
+source $COMMANDCTL_PATH/find.cmdrc
+source $COMMANDCTL_PATH/grep.cmdrc
+source $COMMANDCTL_PATH/system_query.cmdrc
+source $COMMANDCTL_PATH/format.cmdrc
+source $COMMANDCTL_PATH/unix.cmdrc
 # -----------------------------------------------------------------------------
-
 # @GROUP [SYSTEM ADMIN COMMANDS]
 # -----------------------------------------------------------------------------
-source $COMMANDCTL_PATH/network.$COMMOD_EXT
-source $COMMANDCTL_PATH/safeguard.$COMMOD_EXT
-source $COMMANDCTL_PATH/sytemctl.$COMMOD_EXT
-source $COMMANDCTL_PATH/userctl.$COMMOD_EXT
+source $COMMANDCTL_PATH/network.cmdrc
+source $COMMANDCTL_PATH/networkmanager.cmdrc
+source $COMMANDCTL_PATH/ps.cmdrc
+source $COMMANDCTL_PATH/safeguard.cmdrc
+source $COMMANDCTL_PATH/sytemctl.cmdrc
+source $COMMANDCTL_PATH/userctl.cmdrc
 # -----------------------------------------------------------------------------
-
 # @GROUP [DEVELOPER COMMANDS]
 # -----------------------------------------------------------------------------
-source $COMMANDCTL_PATH/vagrant.$COMMOD_EXT
-source $COMMANDCTL_PATH/mysql.$COMMOD_EXT
-source $COMMANDCTL_PATH/web.$COMMOD_EXT
+source $COMMANDCTL_PATH/git.cmdrc
+source $COMMANDCTL_PATH/task.cmdrc
+source $COMMANDCTL_PATH/mysql.cmdrc
+source $COMMANDCTL_PATH/vagrant.cmdrc
+source $COMMANDCTL_PATH/web.cmdrc
 # -----------------------------------------------------------------------------
-
-# @GROUP [SERVER / REMOTE COMMANDS]
-# -----------------------------------------------------------------------------
-#source $COMMANDCTL_PATH/ghost.$COMMOD_EXT
-#source $COMMANDCTL_PATH/gitlab.$COMMOD_EXT
-#source $COMMANDCTL_PATH/apache2.$COMMOD_EXT
-#source $COMMANDCTL_PATH/nginx.$COMMOD_EXT
-#source $COMMANDCTL_PATH/mattermost.$COMMOD_EXT
-#source $COMMANDCTL_PATH/gitea.$COMMOD_EXT
-#source $COMMANDCTL_PATH/magento2.$COMMOD_EXT
-#source $COMMANDCTL_PATH/wp.$COMMOD_EXT
-# -----------------------------------------------------------------------------
-
 # @GROUP [LOCAL USER COMMANDS]
 # -----------------------------------------------------------------------------
 # Theme setup, window application, desktop related commands only usable at
 # your local machine
 # -----------------------------------------------------------------------------
-#source $COMMANDCTL_PATH/local.func.getterm_theme
-#source $COMMANDCTL_PATH/local.func.colorterm
+#source $COMMANDCTL_PATH/gnome.cmdrc
+source $COMMANDCTL_PATH/xsession_apps.cmdrc
+source $COMMANDCTL_PATH/colors.cmdrc
+source $COMMANDCTL_PATH/history.cmdrc
+source $COMMANDCTL_PATH/devnotes.cmdrc
+# @GROUP [SERVER / APPLICATION SPECIFIC COMMANDS]
 # -----------------------------------------------------------------------------
-
-
-# DYNAMICALY GENEREATED 
+#source $COMMANDCTL_PATH/ghost.cmdrc
+#source $COMMANDCTL_PATH/gitlab.cmdrc
+#source $COMMANDCTL_PATH/apache2.cmdrc
+#source $COMMANDCTL_PATH/nginx.cmdrc
+#source $COMMANDCTL_PATH/mattermost.cmdrc
+#source $COMMANDCTL_PATH/gitea.cmdrc
+#source $COMMANDCTL_PATH/magento2.cmdrc
+#source $COMMANDCTL_PATH/wp.cmdrc
+# -----------------------------------------------------------------------------
+# *NEW* DYNAMICALY GENEREATED
 # =============================================================================

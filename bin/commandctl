@@ -7,10 +7,6 @@
 #   If neither option is supplied and an error occurred or command cannot be found, the exit status is 127.
 #   Otherwise, the exit status of the  command builtin is the exit status of command.
 
-if [ -z "$EDITOR" ]; then
-  EDITOR=nano
-fi
-
 
 _commandctl_help () {
   echo -e "\n[Commands]\n"
@@ -31,19 +27,19 @@ _commandctl_help () {
 
 
 _list_paths () {
-  echo -e "\n[Commandctl Paths]\n"
-  echo "COMMAND MANIFEST: $COMMANDCTL_INDEX"
-  echo "COMMAND MODULE PATH: $COMMANDCTL_PATH"
-  echo "COMMAND INDEX PATH: $COMMANDCTL_INDEX_PATH"
-  echo "COMMAND EXT: $COMMOD_EXT"
-  echo "COMMAND DIR: $COMMOD_DIR"
+  echo -e "\n[Commandctl Env]\n"
+  echo "Command Module Ext: $CMD_MOD_EXT"
+  echo "Command Module Dir: $CMD_MOD_DIR"
+  echo "Command Module Config: $COMMANDCTL_INDEX"
+  echo "Command Module Path: $COMMANDCTL_PATH"
+  echo "Command Module Config Path: $COMMANDCTL_INDEX_PATH"
 }
 
 
 _list_commands () {
    echo "List commands"
    find $COMMANDCTL_PATH -type f \
-    -name *.cmdrc \
+    -name "*.cmdrc" \
     -printf "\n\t[%P]\n\n" \
     -exec grep -i --no-filename -e "^\s*alias" {} \; \
     | sed 's/alias//;s/^\s*//;s/^\([a-zA-Z0-9\.\_\-]*\)\=/\1                                   /' \
@@ -59,36 +55,42 @@ _list_modules () {
   | sed 's/^[^#]/  [ON] s/' \
   | sed 's/^#/ [OFF] /' \
   | sed 's/source \$COMMANDCTL_PATH\// /' \
-    | sed 's/\.$COMMOD_EXT//'
+  | sed 's/\.$CMD_MOD_EXT//'
   echo -e "----------------------------------\n"
 }
 
 
 _add_module () {
+
   # INPUT EXISTS OR IT IS AN ERROR
+
   MODULE_NAME=${1:?Error Module Not Defined}
-  NEW_MODULE_PATH="$COMMANDCTL_PATH/$MODULE_NAME.$COMMOD_EXT"
+  NEW_MODULE_PATH="$COMMANDCTL_PATH/$MODULE_NAME.$CMD_MOD_EXT"
 
   # A FILE BY THIS NAME ALREADY EXISTS
+
   if [ -a $NEW_MODULE_PATH ]; then
-      echo -e "Error:  A module with the name \"$NEW_MODULE_PATH\" already exist\n Please select a different name"
-      return 1;
+    echo -e "Error:  A module with the name \"$NEW_MODULE_PATH\" already exist\n Please select a different name"
+    return 1;
   else
-      MODULE_HEADER="#!/bin/bash\n\n# =============================================================================\n"
-      MODULE_HEADER="$MODULE_HEADER#  $MODULE_NAME\n# =============================================================================\n"
-      MODULE_HEADER="$MODULE_HEADER# Add a short description\n# -----------------------------------------------------------------------------\n"
+    MODULE_HEADER="#!/bin/bash\n\n# =============================================================================\n"
+    MODULE_HEADER="$MODULE_HEADER#  $MODULE_NAME\n# =============================================================================\n"
+    MODULE_HEADER="$MODULE_HEADER# Add a short description\n# -----------------------------------------------------------------------------\n"
 
-      touch $NEW_MODULE_PATH
-      echo -e "$MODULE_HEADER" >> $NEW_MODULE_PATH
+    touch $NEW_MODULE_PATH
 
-      command nano $NEW_MODULE_PATH
+    echo -e "$MODULE_HEADER" >> $NEW_MODULE_PATH
 
-      echo "BACKING UP..."
-      echo "cp \"$COMMANDCTL_INDEX_PATH\" \"$LIB0_SHELLPATH/.backup/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak\""
-      command cp "$COMMANDCTL_INDEX_PATH" "$LIB0_SHELLPATH/.backup/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak"
-      echo "source \$COMMANDCTL_PATH/$MODULE_NAME.\$COMMOD_EXT" >> "$COMMANDCTL_INDEX_PATH"
+    command nano $NEW_MODULE_PATH
 
-      echo "Module has been added. You should now reload and test the commands you added."
+    echo "BACKING UP..."
+    echo "cp \"$COMMANDCTL_INDEX_PATH\" \"$ZERO_SHELL/.backup/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak\""
+
+    command cp "$COMMANDCTL_INDEX_PATH" "$ZERO_SHELL/.backup/$COMMANDCTL_INDEX.$(date +'%y%m%d.%H%M%S').bak"
+
+    echo "source \$COMMANDCTL_PATH/$MODULE_NAME.\$CMD_MOD_EXT" >> "$COMMANDCTL_INDEX_PATH"
+
+    echo "Module has been added. You should now reload and test the commands you added."
   fi
   return 0
 }
@@ -96,27 +98,39 @@ _add_module () {
 
 _edit_module () {
   SELECTION=${1:?The edit command requires parameter}
-  MODULE_PATH="$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
+
+  MODULE_PATH="$COMMANDCTL_PATH/$SELECTION.$CMD_MOD_EXT"
+
+  if [ -z "$EDITOR" ]; then
+    EDITOR=nano
+  fi
+
   echo "Editing: $SELECTION - $MODULE_PATH"
 
-  if [ -a "$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT" ]; then
-    echo "${EDITOR} \"$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT\""
+  if [ -a "$COMMANDCTL_PATH/$SELECTION.$CMD_MOD_EXT" ]; then
 
-    ${EDITOR} "$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
+    echo "${EDITOR} \"$COMMANDCTL_PATH/$SELECTION.$CMD_MOD_EXT\""
+
+    ${EDITOR} "$COMMANDCTL_PATH/$SELECTION.$CMD_MOD_EXT"
+
   else
-    echo -e "Module \"$COMMANDCTL_PATH\/$SELECTION.$COMMOD_EXT\" does not exist\n Please select a different name"
+
+    echo -e "Module \"$COMMANDCTL_PATH\/$SELECTION.$CMD_MOD_EXT\" does not exist\n Please select a different name"
+
     _list_modules
+
     return 1
+
   fi
 }
 
 
 _show_module () {
   SELECTION=${1:?The edit command requires parameter}
-  MODULE_PATH="$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT"
+  MODULE_PATH="$COMMANDCTL_PATH/$SELECTION.$CMD_MOD_EXT"
   echo "$SELECTION - $MODULE_PATH"
 
-  if [ -a "$COMMANDCTL_PATH/$SELECTION.$COMMOD_EXT" ]; then
+  if [ -a "$COMMANDCTL_PATH/$SELECTION.$CMD_MOD_EXT" ]; then
     cat "$MODULE_PATH" \
     | grep -v \#\# \
     | grep -e 'alias\|[\-|]' \
@@ -138,7 +152,13 @@ _show_module () {
 
 
 _edit_module_index () {
+
+  if [ -z "$EDITOR" ]; then
+    EDITOR=nano
+  fi
+
   ${EDITOR} "$COMMANDCTL_INDEX_PATH"
+
 }
 
 
@@ -176,7 +196,7 @@ commandctl () {
 
    reload)
       echo "source $COMMANDCTL_INDEX_PATH"
-      LIB0_SHELLPATH=$LIB0_SHELLPATH command source $COMMANDCTL_INDEX_PATH
+      ZERO_SHELL=$ZERO_SHELL command source $COMMANDCTL_INDEX_PATH
       return
         ;;
 
@@ -204,7 +224,7 @@ commandctl () {
 
   manage)
       _edit_module_index
-	;;
+     	;;
 
        *)
         _commandctl_help
@@ -214,10 +234,10 @@ commandctl () {
 
 
 if [ "$COMMANDCTL_DEBUG" = "yes" ]; then
-  echo "0: $0"
-  echo "$: $$"
-  echo "@: $@"
+  echo "0:$0"
+  echo "\$:$$"
+  echo "@:$@"
   echo "commandctl $1"
 fi
 
-commandctl $@
+commandctl "$@"
