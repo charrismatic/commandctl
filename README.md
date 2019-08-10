@@ -1,6 +1,8 @@
 
 
-# Commandctl - Linux command alias and function manager
+# CommandCtl 
+
+Linux command alias and function manager
 
 > One command to make them, one command to find them, one command to edit them and with an alias bind them.
 
@@ -10,7 +12,7 @@
 
 Linux is full of '*ctl' utilities.  
 
-`[something]-ctl` is usually a wrapper script that helps manage commands and groups of commands with that have lots of options or sub commands.  
+`something-ctl` is usually a wrapper script that helps manage commands and groups of commands with that have lots of options or sub commands.  
 
 There is `systemctl` and `sysctl` for you system, `journalctl` to see system `journal`, `networkctl` and `hostnamectl` for network tasks. 
 
@@ -23,13 +25,9 @@ The `commandctl` utility helps you to organize, manage, create, and find your cu
 
 
 ## Usage
-
     commandctl command [option]
 
-
-
 ## Commands
-
     - help                  - print help message
     - list                  - list all commands
     - search                - search commands by keyword
@@ -41,22 +39,18 @@ The `commandctl` utility helps you to organize, manage, create, and find your cu
     - reload                - reload the command files after a change is made
 
 
-
 __You can use commandctl to load custom commands for commandctl__
 
-
-      # ./cmd.d/commandctl.cmdrc
-      comctl              = commandctl
-      comctl.edit         = commandctl edit
-      comctl.goto         = commandctl goto
-      comctl.help         = commandctl help
-      comctl.info         = commandctl info
-      comctl.list         = commandctl list
-      comctl.reload       = commandctl reload
-      comctl.search       = commandctl search
-      comctl.show         = commandctl show
-
-
+    # ./cmd.d/commandctl.cmdrc
+    comctl              = commandctl
+    comctl.edit         = commandctl edit
+    comctl.goto         = commandctl goto
+    comctl.help         = commandctl help
+    comctl.info         = commandctl info
+    comctl.list         = commandctl list
+    comctl.reload       = commandctl reload
+    comctl.search       = commandctl search
+    comctl.show         = commandctl show
 
 ## Command Conventions
 
@@ -103,7 +97,7 @@ These are generally useful command aliases that are useful in any command group
 
 __goto__
 
-If you find yourself often needing to jump to a config directory, then bad to a data directory very far away consider adding a ``.goto` command. This was you don't need to remember the exact path for every task just the name of the command `<task>.goto.config` and  `<server>.goto.data Once you have a few of these for your modst used commands getting around becomes very fast`
+If you find yourself often needing to jump to a config directory, then bad to a data directory very far away consider adding a `.goto` command. This was you don't need to remember the exact path for every task just the name of the command `<task>.goto.config` and `<server>.goto.data` Once you have a few of these for your modst used commands getting around becomes very fast
 
 __search, show, list__
 
@@ -118,10 +112,9 @@ __logs__
 linux `syslog` and `journalctl` have tons of options and parameters, log commands for specific tasks are good to add to every group, when you need to find something in the logs it can be frustrating to remember all the flags and what each option means right in the moment.  Alias them instead and have it ready when you need it.
 
 
+__Example: DevOps Server Modules Group__
 
-  __Example: DevOps Server Modules Group__
-
-  ```sh
+```sh
 # gitlab.cmdrc 
 alias gl="gitlab-ctl"
 alias gl.show="gitlab-ctl show-config"
@@ -164,18 +157,14 @@ alias ls.ports="netstat -tunlap"
 alias ls.routes="netstat -r"
 alias ls.socks.long="ss --processes --numeric --udp --ipv4 --listening --tcp --unix --contexts"
 alias ls.socks="ss -4ltdn"
-  ```
-
-
+```
 
 For more examples see the `/cmd.d`directory 
 
-
-
 ## Experimental Features (WIP)
+ - Tagging modules with to allow group control (on/off) or for exporting to a different system (approved command groups to forward to a remote session / or a new machine)  
+ - Save commands (from history or interactive) to new alias  
+ - Filter and parse history for commands that should be aliases  
 
-  - Tagging modules with to allow group control (on/off) or for exporting to a different system (approved command groups to forward to a remote session / or a new machine)
 
-  - Save commands (from history or interactive) to new alias
-  - Filter and parse history for commands that should be aliases.
-
+https://github.com/charrismatic/commandctl
