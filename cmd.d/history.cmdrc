@@ -1,53 +1,66 @@
 #!/bin/bash
 
 # =============================================================================
-# History
-# ENV: HISTFILE, FCEDIT
+# - HISTORY
 # =============================================================================
 
-
-
-# SORT AND ARCHIVE CURRENT HISTORY THEN RESET THE HISTORY FILE
 # -----------------------------------------------------------------------------
-backup_history () {
-  PROFILE=$(USER)\_$(hostname)
-  STAMP=$(date -d today +%y.%m.%d.%H%I%M%S)
-  BACKUP_PATH=~/lib/bash
-  OUTFILE=$PROFILE\_HISTORY.$STAMP
-  echo "archiving command history... $OUTFILE"
-  cat ~/.bash_history | grep -x '.\{4,\}' | sort --ignore-case --unique --merge --dictionary-order > ~/.$PROFILE.$STAMP.bash_history
-  wait
-  mv ~/.bash_history.tmp $BACKUP_PATH/$OUTFILE
-  wait
+# -----------------------------------------------------------------------------
+# FUNCTIONS
+# -----------------------------------------------------------------------------
+
+_history_trim_timestamp () {
+  sed -E 's/^\s[0-9]*\s+[0-9\.]*\s+//'
+}
+
+_history_last () {
+  LIST_COUNT=${1:-50}
+  history | tail -n $LIST_COUNT | _history_trim_timestamp;
+}
+
+_history_search () {
+  history | _history_trim_timestamp | grep --color=always "$1" ;
+}
+
+_history_unique () {
+  history | _history_trim_timestamp | uniq
+}
+
+_history_backup () {
+  HISTORY_TIMESTAMP="$(date -d today +%y.%m.%d.%H%I%M%S)"
+  HISTORY_BACKUP_PATH="$HOME/log/bash"
+  HISTORY_FILE_NAME="${USER}_${HOSTNAME}"
+  HISTORY_BACKUP_FILE="${HISTORY_FILE_NAME}_history.${HISTORY_TIMESTAMP}"
+
+  echo "Archiving command history... $HISTORY_BACKUP_FILE"
+
+  history -a
+  history -w
+
+  history \
+    | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' \
+    | uniq \
+    > "${HISTORY_BACKUP_PATH}/${HISTORY_FILE_NAME}.${HISTORY_TIMESTAMP}"
+
   history -c && history -w
+
   echo "done" \;
 }
 
 
-
-alias history_sort="cat ~/.bash_history | grep -x '.\{3,\}' | sort --ignore-case --unique --merge > ~/.bash_history.tmp; wait; cp ~/.bash_history.tmp ~/.bash_history"
-
-
-
-## BORROWED
-# http://thirtysixthspan.com/posts/grep-history-for
-# ghf - [G]rep [H]istory [F]or top ten commands and execute one
-#  
-#  ghf "Most frequent command in recent history"
-#  ghf {command} "Most frequent instances of {command} in all history"
-#  !! {command-number} "Execute {command-number} after a call to ghf"
-function latest-history { history | tail -n 50 ; }
-function grepped-history { history | grep "$1" ; }
-function chop-first-column { awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' ; }
-function add-line-numbers { awk '{print NR " " $0}' ; }
-function top-ten { sort | uniq -c | sort -r | head -n 10 ; }
-function unique-history { chop-first-column | top-ten | chop-first-column | add-line-numbers ; }
-function ghf {
-  if [ $# -eq 0 ]; then latest-history | unique-history; fi
-  if [ $# -eq 1 ]; then grepped-history "$1" | unique-history; fi
-  if [ $# -eq 2 ]; then
-    `grepped-history "$1" | unique-history | grep ^$2 | chop-first-column`;
-  fi
+_history_get () {
+  "${1:-*}" \
+  history !?${1}
 }
 
-
+alias h="history"
+alias hist.edit="fc"
+alias hist.trim="history | _history_trim_timestamp"
+alias hist.get="_history_get"
+alias hist.search="_history_search"
+alias hist.recent="_history_last 50"
+alias hist.list="_history_last"
+alias hist.list.10="_history_last 10"
+alias hist.list.100="_history_last 100"
+alias hist.unique="_history_unique"
+alias hist.backup="_history_backup"

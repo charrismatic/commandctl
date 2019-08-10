@@ -22,4 +22,6 @@ alias t.add="task add"
 alias t.vit="vit"
 alias t.start="_task_start"
 alias t.stop="_task_stop"
-
+alias t.ls.all.proj="task rc.list.all.projects=1 projects"
+alias t.examples="pygmentize /data/0/lib/task/docs/examples.md | less -S"
+alias t.timesum="pygmentize /data/0/lib/task/docs/examples.md | less -S"

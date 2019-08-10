@@ -1,0 +1,84 @@
+#!/bin/bash
+
+
+_git_stats_update () {
+  PROJECT_FOLDER="${1:-'./'}"
+  USER_EMAILS="$(git config --global --get stats.importemails)"
+
+  git-stats-importer --emails $USER_EMAILS --find-repos $PROJECT_FOLDER
+
+}
+
+
+# FIND ALL GIT FOLDERS UNDER CURRENT DIRECTORY
+# RUNS THE STATUS COMMAND TO SEE IF ANY CAN BE UPDATED.
+_git_group_status () {
+
+  find . \
+    -type d \
+    -path "*git" \
+    -printf "\n[%h] \n\n" \
+    -execdir git status --short  \;
+
+}
+
+
+_git_group_import_stats () {
+
+  find . \
+    -type d \
+    -path "*git" \
+    -printf "\n[%h] \n\n" \
+    -execdir git stats-importer \;
+
+}
+
+_git_group () {
+
+
+  ## WARNING: THIS COMMAND COULD BE VERY DANGEROUS
+  # IF NOT USED CAREFULY. TAKE NOTE TO CORRUPT ENTIRE
+  # PROJECT FOLDERS OR HARD DRIVES. A FEW SAFEGUARDS ARE
+  # BUILT IN BUT IT IS LEFT MOSTLY UP TO THE USER TO CREATE
+  # COMMANDS CAREFULY
+
+  # FOR EXAMPLE ALL THE PRELIMIARY COMMANDS AUTHORED ARE ONLY
+  # USED THROUGH ALIAS AND ARE NOT DESIGNED TO BE USED DYNAMICALLY
+  # FROM USER INPUT.
+
+  GIT_GROUP_COMMAND="${@?No Command Entered}"
+
+  find . \
+  -type d \
+  -path "*node_modules" \
+  -prune \
+  -o -path "*git" \
+  -a -printf "\n[%h] \n\n" \
+  -execdir git ${GIT_GROUP_COMMAND} \;
+}
+
+
+
+## GIT ALIASES
+alias status="git status"
+alias gs="git status"
+alias ga="git add"
+alias gm="git commit -m"
+
+alias git.status="git status"
+alias git.add="git add"
+alias git.clone="git clone"
+alias git.config="git config"
+alias git.shortlog="git log --date=format-local:%Y-%m-%d\ %H:%M --format='%ad %h %an %s'"
+
+alias commit="git commit -m"
+alias clone="git clone"
+alias git.cl="git clone"
+alias git.globalconfig="git config --global"
+
+alias gpull="git pull"
+alias git.commands="git help -a"  # OR git --help --all
+alias git.diff="git diff --color | diff-so-fancy | less --tabs=4 -RFX --pattern '^(Date|added|deleted|modified): '"
+
+alias giit-group.status="_git_group status --short"
+alias giit-group.update="_git_group fetch origin"

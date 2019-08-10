@@ -89,7 +89,6 @@ alias sc.dmon.restart="daemon-reexec"
 ##alias add-requires=""
 ##alias unit-get-default=""
 ##alias unit-set-defealt=""
-alias sc.rsq.listkeys="bin/system_rescue_help"
+alias sc.rsq.listkeys="/data/0/bin/system_rescue_help"
 
 ##
-

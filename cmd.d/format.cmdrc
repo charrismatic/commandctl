@@ -12,10 +12,25 @@ trim_bin_chars () {
   print "\n" \;
 }
 
+
+_trim_first_column () {
+  awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' ;
+}
+
+
+_insert_line_numbers () {
+  awk '{print NR " " $0}' ;
+}
+
+
+alias format.trim_column="_trim_first_column"
+alias format.insert_linenum="_insert_line_numbers"
+alias termlen="tput cols"
+alias halfterm="echo $(($COLUMNS / 2 ))"
+alias fullterm="echo $COLUMNS"
 alias postcss.singleline="postcss --no-map -u postcss-single-line"
 alias postcss.nocomment="postcss --no-map -u postcss-discard-comments"
 alias format.striplines="grep -v -E \"^[[:space:]]*$\""
 alias format.noemptylines="grep -v -e \"^[[:space:]]*$\""
 alias format.eolspaces="sed -r 's/\s*$/  /g'"
 alias cleancss="node-sass --output-sytle expanded | postcss.singleline | postcss.nocomment | format.noemptylines"
-

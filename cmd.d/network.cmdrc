@@ -4,6 +4,37 @@
 # 2. POWERUSER / SYSADMIN FUNCTIONS
 # =============================================================================
 
+
+_ban_ip () {
+    BANNED_IP="${1?'This command requires a valid ip address'}"
+    echo  "Settings drop rule address ${BANNED_IP} "
+    iptables -A INPUT -s ${BANNED_IP} -j DROP
+    netfilter-persistent save
+}
+
+_remove_ip_ban () {
+    BANNED_IP="${1?'This command requires a valid ip address'}"
+    echo  "Removing drop rule address ${BANNED_IP} "
+    iptables -D INPUT -s ${BANNED_IP} -j DROP
+    netfilter-persistent save
+}
+
+_block_ip_port () {
+    BLOCKED_IP="${1?'This command requires a valid ip address'}"
+    BLOCKED_PORT="${1?'This command requires a port number in addition to ip address'}"
+    echo  "Settings drop rule address ${BANNED_IP} on port ${BLOCKED_PORT}"
+    iptables -A INPUT -s $BLOCKED_IP -p tcp --destination-port $BLOCKED_PORT -j DROP
+    netfilter-persistent save
+}
+
+_remove_ip_port_block () {
+    BLOCKED_IP="${1?'This command requires a valid ip address'}"
+    BLOCKED_PORT="${1?'This command requires a port number in addition to ip address'}"
+    echo  "Removing drop rule address ${BANNED_IP} on port ${BLOCKED_PORT} "
+    iptables -D INPUT -s $BLOCKED_IP -p tcp --destination-port $BLOCKED_PORT -j DROP
+    netfilter-persistent save
+}
+
 _ip2geo (){
   IPADDR="${1?-'IP is required'}"
   #GEOLOC="$(geoiplookup $IPADDR)"
@@ -26,41 +57,54 @@ _whois_ip () {
 }
 
 
-_find_ips () {
-   grep --color -r -i --with-filename -E "[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}"  access-logs/
+_ipgrep () {
+   grep --color -i --with-filename -E "[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}"
 }
 
-if [[ $RUN_ENV == "TEST" ]]; then
-  echo "TEST"
-   _ip2geo 154.16.10.128
-  exit 0
-else
-  grep -E "^[0-9\.]*\b" .lastlogin -o \
-    | sort --version-sort --unique \
-    | while read IPADR
-      do
-        _ip2geo $IPADR
-        _ip4host $IPADR
-        _whois_ip $IPADR
-      done
+_list_login_ip_locations () {
 
-fi
+  if [[ $RUN_ENV == "TEST" ]]; then
+    echo "TEST"
+     _ip2geo 154.16.10.128
+    exit 0
+  else
+    grep -E "^[0-9\.]*\b" ~/.lastlogin -o \
+      | sort --version-sort --unique \
+      | while read IPADR
+        do
+          _ip2geo $IPADR
+          _ip4host $IPADR
+          _whois_ip $IPADR
+        done
+
+  fi
+
+}
+
 
 
 ### NETWORKING
-alias myip="dig +short http://myip.opendns.com @http://resolver1.opendns.com"
+alias myip="curl ifconfig.co/json"
 alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias http_dump='sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\: .*|GET \/.*\"'
-alias scp_resume='rsync --partial --progress --rsh=ssh' # Resume a broken scp transfer
 
 ## SOCKETS
-alias ls.socks.short="ss -4ltdn"
+alias ls.socks="ss -4ltdn"
 alias ls.socks.long="sudo ss --processes --numeric --udp --ipv4 --listening --tcp --unix --contexts"
+alias net.ban="_ban_ip"
+alias net.unban="_remove_ip_ban"
+alias net.blockport="_block_ip_port"
+alias net.unblockport="_remove_ip_port_block"
+alias net.whois="_whois_is"
+alias net.hostip="_ip4host"
+alias ipgrep="_ipgrep"
+alias ip2geo="_ip2geo"
+
 
 ## PORTS
 alias ls.ports="netstat -tunlap"
 alias ls.routes="netstat -r"
-alias ls.routes="netstat -r"
+
 alias ls.net="sudo lsof -P -n -i"
 alias ls.net.4="sudo lsof -P -n -i4"
 alias ls.net.4.resolve="sudo lsof -P -i4"

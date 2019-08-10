@@ -1,0 +1,219 @@
+#!/bin/bash
+
+export FIND_QUIET="yes"
+export FIND_NOCASE="yes"
+export FIND_DEPTH_MAX="-maxdepth 10"
+export FIND_DEPTH_MIN="-mindepth 0"
+export FIND_EXCLUDE="node_modules,.git"
+export FIND_PRINT_FORMAT="%P\n"
+export FIND_PRINT_EXTENDED_FORMAT="%P\n n"
+##export FIND_EXCLUDE=" \( -path *node_modules -o -path *.git \) -prune -o"
+
+
+_find_expand_excluded () {
+  STRING_TO_EXPAND="${1:-$FIND_EXCLUDE}"
+  EXPANDED="${STRING_TO_EXPAND//,/ -o -path *}"
+  echo "( -path *${EXPANDED}"
+}
+
+
+_find_set_flags () {
+  FLAGS=""
+
+  if [ $FIND_QUIET == "yes" ]; then
+    FLAGS="$FLAGS -nowarn"
+  else
+    FLAGS="$FLAGS -warn"
+  fi
+  unset FIND_FLAGS
+
+  FIND_FLAGS="$FLAG"
+
+  export FIND_FLAGS
+  echo " $EXPANDED_STRING"
+
+}
+
+
+# SHORTCUT FOR FIND COMMAND
+
+get () {
+  WHAT="${1:?'What are you trying to get?'}"
+  find . $FIND_EXCLUDE -iname "$WHAT" \;
+}
+
+__find () {
+    WHAT="${1:-}"
+    OTHERS="${@:2}"
+
+    FIND_FLAGS=""
+
+    # let the fist arg be special
+    [[ -d $WHAT ]] &&  FIND_FLAGS="$WHAT" && unset WHAT
+
+    FIND_FLAGS="${FIND_FLAGS} $( _find_expand_excluded $FIND_EXCLUDE )"
+    FIND_FLAGS="${FIND_FLAGS} ) -prune -o"
+    [[ "$WHAT" == "dirs" ]] &&  FIND_FLAGS="${FIND_FLAGS} -type d" && unset WHAT
+    [[ "$WHAT" == "files" ]] &&  FIND_FLAGS="${FIND_FLAGS} -type f" && unset WHAT
+    [[ "$WHAT" == "cat" ]] &&  FIND_FLAGS="${FIND_FLAGS} -type f -exec cat {} \;" && unset WHAT
+    [[ ! -z $WHAT ]] && FIND_FLAGS="${FIND_FLAGS} -iname ${WHAT}" && unset WHAT
+    [[ ! -z $OTHERS ]] && FIND_FLAGS="${FIND_FLAGS} ${OTHERS}"
+
+    echo "find ${FIND_FLAGS} -printf ${FIND_PRINT_FORMAT}"
+   find ${FIND_FLAGS} -printf "${FIND_PRINT_FORMAT}"
+
+}
+
+
+
+# FIND REGEX
+_find_regex () {
+  WHAT="${1:-*}"
+  WHERE="${2:-.}"
+  FORMAT="${3:-$FIND_PRINT_FORMAT}"
+
+  find $WHERE $FIND_EXCLUDE -regex "$WHAT" -printf "$FORMAT"
+}
+
+
+
+# SHORTCUT FOR FIND COMMAND WITH GREP
+_find_grep () {
+  WHAT="${1:?What are you trying to find}"
+  FILTER="${2:-*}"
+  WHERE="${3:-.}"
+
+  find "$WHERE" $FIND_IGNORE -regex "$FILTER" \
+    -exec grep \
+      --color=always \
+      --extended-regexp \
+      --ignore="$GREP_EXCLUDE"
+      --with-filename \
+      --after-context=0 \
+      --before-context=0 \
+      "$WHAT" {} \;
+}
+
+
+#EXECUTE A COMMAND ON LIST OF FILES AGAINST A PATTERN
+_find_exec () {
+  WHAT="${1:?'What are you trying to find?'}"
+  THEN="${@:2}"
+  find ./ \
+    -type f \
+    -iname "$WHAT" \
+    -exec "$THEN" "{}" \;
+}
+
+
+#SHORTCUT FOR FIND COMMAND
+_find_cat () {
+  FIND_FLAGS="$@"
+  FIND_PRINT_FORMAT="\n---\nFILE:%P\n---\n"
+
+  find ./ \
+    -type f ${FIND_FLAGS} \
+    -printf "${FIND_PRINT_FORMAT}" \
+    -exec cat "{}" \;
+}
+
+
+#FIND A PATTERN IN FILES FOUND FROM DATE
+_find_in_from () {
+    WHAT="$1"
+    WHERE="${2:-./}"
+    find "$WHERE" -ctime -2 -type f -readable \
+      -exec grep \
+        --color=always \
+        --extended-regexp \
+        --ignore-case \
+        --with-filename \
+        --after-context=0 \
+        --before-context=0 \
+        "$WHAT" -- {} \;
+}
+
+
+
+_find_from_binary () {
+    WHAT="$1"
+
+   find ./ -type f \
+     -printf '%p' \
+     -exec cat {} \; \
+     | tr -cd '\11\12\40-\176'  \
+     | grep -i $WHAT
+}
+
+
+
+
+#FIND STRINGS IN FILES
+#find string in files in path
+#  find <toys> in <./closet>
+_find_this_there () {
+   WHAT="$1"
+   WHERE="${2:-./}"
+   find "$WHERE" \
+    -exec grep \
+    -exec grep \
+        --color=always \
+        --extended-regexp \
+        --ignore-case \
+        --with-filename \
+        --after-context=0 \
+        --before-context=0 \
+        "$WHAT" "{}" \;
+
+
+}
+
+
+
+#find string in files in path when filter (optional)
+_find_this_there_named () {
+  WHAT="$1"
+  WHERE="${2:-./}"
+  LIKE="${3:-}"
+
+  find "$WHERE" \
+    -iname "$LIKE" \
+    -exec grep \
+        --color=always \
+        --extended-regexp \
+        --ignore-case \
+        --with-filename \
+        --after-context=0 \
+        --before-context=0 \
+        "$WHAT" "{}" \;
+
+}
+
+
+_find_changed () {
+  find ./ \
+  -maxdepth 10 \
+  ! -path "/proc/*" \
+  ! -path "/run/*" \
+  ! -path "/dev/*" \
+  ! -path "/sys/*" \
+  -type f \
+  -size +512 \
+  -ctime -10 \
+  -printf "%Cm%Cd%CH%CM%CS \t %M %u %g %p %s %l \n"
+}
+
+
+alias f="__find"
+alias f.files="__find files"
+alias f.dirs="__find dirs"
+alias f.cat="_find_cat"
+alias f.from="_find_in_from"
+alias f.grp="_find_grep"
+alias f.ex="_find_exec"
+alias f.regex="_find_regep"
+alias f.list="find ./ -type f -ls"
+alias f.binary="_find_from_binary"
+alias f.this_there="_find_this_there"
+alias f.this_there_with="_find_this_there_named"
+alias f.changed="_find_changed"

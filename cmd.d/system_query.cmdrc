@@ -37,13 +37,28 @@ function psgrep () {
 ## ALTERNATE VERSION
 # alias psgrep="ps aux | grep -v grep | grep --color -i"
 
-alias env.1="env"
-alias env.all="decalre p"
-alias ls.functions="set"
+
+# Usage: /usr/bin/env [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]
+# Set each NAME to VALUE in the environment and run COMMAND.
+#
+# Mandatory arguments to long options are mandatory for short options too.
+#   -i, --ignore-environment  start with an empty environment
+#   -0, --null           end each output line with NUL, not newline
+#   -u, --unset=NAME     remove variable from the environment
+#   -C, --chdir=DIR      change working directory to DIR
+#       --help     display this help and exit
+#       --version  output version information and exit
+#
+# A mere - implies -i.  If no COMMAND, print the resulting environment.
+alias engrep="printenv | sort |grep -i --color=always"
+alias ls.env="env | sort"
+alias ls.env.all="declare p"
+
 alias aliases="aliases"
-alias ls.aliases="aliases"
 alias mank="man -k"
 alias lessfind="less -a"
 alias histgrep="history | cut -c 8- | sort | grep --color"
+alias ls.functions="set"
+alias ls.aliases="aliases"
 alias gp.commands="man -k"
 alias gp.history="history | cut -c 8- | sort | grep --color"

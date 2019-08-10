@@ -1,8 +1,19 @@
 #!/bin/bash
 
 # =============================================================================
-# NAME: BASH BASICS
+# - UNIX COMMANDS AND UTILITIES
 # =============================================================================
+
+
+
+
+_top_n () {
+  TOP_COUNT=${1:-10}
+  sort | uniq -c | sort -r | head -n $TOP_COUNT ;
+}
+
+
+
 # /----------------------------------------------------------------------------
 # FILESYSTEM: CONTROL
 # -----------------------------------------------------------------------------
@@ -18,11 +29,14 @@ alias chmod="chmod --changes --preserve-root"
 # /---------------------------------------------------------------------------
 # FILESYSTEM: CHANGES
 # -----------------------------------------------------------------------------
-alias diffy="diff --color --ignore-all-space --ignore-blank-lines --side-by-side --suppress-common-lines --recursive --exclude=*.git/*"
+alias diffy="diff --width=$COLUMNS --color=always --ignore-all-space --ignore-blank-lines --side-by-side --suppress-common-lines --recursive --exclude=*.git/*"
+alias fdiff="rsync -ric --dry-run"
+
+#ls --block-size=KB   --classify --literal --group-directories-first --almost-all --color=always --numeric-uid-gid --recursive --show-control-chars --literal -v --time-style=iso --no-group
 
 # /----------------------------------------------------------------------------
 # MEMORY
-# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------# -----------------------------------------------------------------------------
 alias free="free -ht"
 
 ## -----------------------------------------------------------------------------
@@ -119,19 +133,19 @@ alias screenfix="reset"
 
 ## CLEANUP AND MANGEMENT
 ## -----------------------------------------------------------------------------
-CLEANUP_PRINT_FORMAT='%Cm.%Cd.%CY %u (%m) \033[01;33m %M \033[0m %h \033[00;31m %f \033[0m \n'
-CLEANUP_MAX_DEPTH="-maxdepth 20"
-CLEANUP_SORT="sort --numeric-sort --reverse"
-CLEANUP_DUCOMMAND="du --block-size=M -s"
-CLEANUP_TOP="head -n 20"
-alias cleanup.ls.node_modules="find ./ ${CLEANUP_MAX_DEPTH} -type d -path *node_modules -exec ${CLEANUP_DUCOMMAND} {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP} "
-alias cleanup.ls.dirsize.3="find -mindepth 3 -maxdepth 3 -type d -exec \"${CLEANUP_DUCOMMAND}\" {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP}"
-alias cleanup.ls.dirsize.2="find -mindepth 2 -maxdepth 2 -type d -exec \"${CLEANUP_DUCOMMAND}\" {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP}"
-alias cleanup.ls.dirsize.1="find -mindepth 1 -maxdepth 1 -type d -exec \"${CLEANUP_DUCOMMAND}\" {} \; | ${CLEANUP_SORT} | ${CLEANUP_TOP}"
-alias cleanup.ls.files.exe="find ./ ${CLEANUP_MAX_DEPTH} -type f -executable -printf \"${CLEANUP_PRINT_FORMAT}\""
-alias cleanup.ls.files.644="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 644 -printf \"${CLEANUP_PRINT_FORMAT}\""
-alias cleanup.ls.files.664="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 664 -printf \"${CLEANUP_PRINT_FORMAT}\""
-alias cleanup.ls.files.646="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 666 -printf \"${CLEANUP_PRINT_FORMAT}\""
-alias cleanup.ls.files.755="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 755 -printf \"${CLEANUP_PRINT_FORMAT}\""
-alias cleanup.ls.files.777="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 777 -printf \"${CLEANUP_PRINT_FORMAT}\""
-alias cleanup.ls.files.444="find ./ ${CLEANUP_MAX_DEPTH} -type f -perm 444 -printf \"${CLEANUP_PRINT_FORMAT}\""
+CLEAN_PRINT_FORMAT='%Cm.%Cd.%CY %u (%m) \033[01;33m %M \033[0m %h \033[00;31m %f \033[0m \n'
+CLEAN_MAX_DEPTH="-maxdepth 20"
+CLEAN_SORT="sort --numeric-sort --reverse"
+CLEAN_DUCOMMAND="du --block-size=M -s"
+CLEAN_TOP="head -n 20"
+alias clean.ls.node_modules="find ./ ${CLEAN_MAX_DEPTH} -type d -path *node_modules -exec $CLEAN_DUCOMMAND {} \; | ${CLEAN_SORT} | ${CLEAN_TOP} "
+alias clean.ls.dirsize.3="find -mindepth 3 -maxdepth 3 -type d -exec \"${CLEAN_DUCOMMAND}\" {} \; | ${CLEAN_SORT} | ${CLEAN_TOP}"
+alias clean.ls.dirsize.2="find -mindepth 2 -maxdepth 2 -type d -exec \"${CLEAN_DUCOMMAND}\" {} \; | ${CLEAN_SORT} | ${CLEAN_TOP}"
+alias clean.ls.dirsize.1="find -mindepth 1 -maxdepth 1 -type d -exec \"${CLEAN_DUCOMMAND}\" {} \; | ${CLEAN_SORT} | ${CLEAN_TOP}"
+alias clean.ls.files.exe="find ./ ${CLEAN_MAX_DEPTH} -type f -executable -printf \"${CLEAN_PRINT_FORMAT}\""
+alias clean.ls.files.644="find ./ ${CLEAN_MAX_DEPTH} -type f -perm 644 -printf \"${CLEAN_PRINT_FORMAT}\""
+alias clean.ls.files.664="find ./ ${CLEAN_MAX_DEPTH} -type f -perm 664 -printf \"${CLEAN_PRINT_FORMAT}\""
+alias clean.ls.files.646="find ./ ${CLEAN_MAX_DEPTH} -type f -perm 666 -printf \"${CLEAN_PRINT_FORMAT}\""
+alias clean.ls.files.755="find ./ ${CLEAN_MAX_DEPTH} -type f -perm 755 -printf \"${CLEAN_PRINT_FORMAT}\""
+alias clean.ls.files.777="find ./ ${CLEAN_MAX_DEPTH} -type f -perm 777 -printf \"${CLEAN_PRINT_FORMAT}\""
+alias clean.ls.files.444="find ./ ${CLEAN_MAX_DEPTH} -type f -perm 444 -printf \"${CLEAN_PRINT_FORMAT}\""

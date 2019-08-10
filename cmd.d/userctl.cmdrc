@@ -1,6 +1,26 @@
 #!/bin/bash
 
 
+#  sa -  summarizes accounting information
+#
+#     [ -a | --list-all-names ]
+#               [ -b | --sort-sys-user-div-calls ]
+#               [ -c | --percentages ] [ -d | --sort-avio ]
+#               [ -D | --sort-tio ] [ -f | --not-interactive ]
+#               [ -i | --dont-read-summary-files ]
+#               [ -j | --print-seconds ] [ -k | --sort-cpu-avmem ]
+#               [ -K | --sort-ksec ] [ -l | --separate-times ]
+#               [ -m | --user-summary ] [ -n | --sort-num-calls ]
+#               [ -p | --show-paging ] [ -P | --show-paging-avg ]
+#               [ -r | --reverse-sort ] [ -s | --merge ]
+#               [ -t | --print-ratio ] [ -u | --print-users ]
+#               [ -v num | --threshold num ] [ --sort-real-time ]
+#               [ --debug ] [ -V | --version ] [ -h | --help ]
+#               [ --other-usracct-file filename ] [ --ahz hz ]
+#               [ --other-savacct-file filename ]
+#               [ [ --other-acct-file ] filename ]#
+
+## see:   getent nss nsswitch.conf
 # @alias ~/bin/lsusrs
 
 list_system_users () {
@@ -26,3 +46,5 @@ alias ls.users="list_system_users"
 alias ls.groups="list_sytem_groups"
 alias ls.system="list_sytsem_information"
 
+alias powerline-shell-edit-config="${EDITOR} $HOME/.config/powerline-shell/config.json"
+alias powerline-shell-get-config="printf \"%s \n\" $HOME/.config/powerline-shell/config.json"

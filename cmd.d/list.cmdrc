@@ -7,6 +7,8 @@
 # /----------------------------------------------------------------------------
 # LIST
 # -----------------------------------------------------------------------------
+# - SH SHELL
+# - alias l="ls --color -h1pFAsog"
 alias l="ls -1 --size --color --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --sort=version --group-directories-first --ignore-backups --show-control-chars --indicator-style classify"
 alias ll="ls -l --color=always --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --almost-all --classify --sort=none -v"
 alias la="ls -alHFSh --group-directories-first --no-group --color"
@@ -40,3 +42,12 @@ alias df="df -ah --tota --block-size=M"
 alias diskspace="df -Th --block-size=M | sort -nr"
 alias folder_size="pwd; du -s --block-size=M;"
 alias folder_size_all="du -S --block-size=M | sort -nr | more;"
+
+slice() {
+  SLICE_DEPTH="${1:-2}"
+  SLICE_ARGS="${@:2}"
+
+ find . -mindepth ${SLICE_DEPTH} -maxdepth ${SLICE_DEPTH} ${SLICE_ARGS}
+
+}
+

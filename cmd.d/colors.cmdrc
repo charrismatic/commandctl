@@ -6,7 +6,7 @@
 # Terminal color formatting utilities
 # -----------------------------------------------------------------------------
 
-_color_escapes_list () {
+_list_color_escapes () {
 
   echo -e "# ======================
   [FORMATTING]
@@ -116,9 +116,9 @@ _clr () {
   BGLTMAG='\033[01;45;37m'
 
   if [ -z "$MSG" ]; then
-    echo -en "${!COLOR}"
+    echo -en "COLOR $COLOR ${!COLOR}"
   else
-    echo -en "${!COLOR} $MSG ${RESET}"
+    echo -en "COLOR $COLOR ${!COLOR} $MSG ${RESET}"
   fi
 }
 
@@ -153,7 +153,7 @@ function color_test_256() {
     done
 }
 
-alias colors.get_code="_clr"
-alias colors.basic="_color_escapes_list"
-alias colors.matrix16="color_test_16"
-alias colors.matrix256="color_test_256"
+alias color.getcode="_clr"
+alias color.listcodes="_list_color_escapes"
+alias color.matrix16="color_test_16"
+alias color.matrix256="color_test_256"

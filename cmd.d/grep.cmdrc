@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# =============================================================================
+# - GREP AND GREPTOOL ALIASES
+# =============================================================================
+# ----------------------------------------------------------------------------
+# THE WORD GRAB IS USED FOR THE GREP ALIASES BECAUSE THE GREP COMMAND
+# IS USED IN TOO MANY VARIOUS CONTEXTS AND PURPOSED TO SIMPLY ALIAS
+# THE COMMAND TO ADD A FLAG OR TWO LIKE YOU MIGHT WITH `ls=ls --color`
+# -----------------------------------------------------------------------------
+
+alias grab="grep"
+alias grab.binary="grep --text"
+alias grab.files="grep --files-with-matches"
+alias grab.count="grep --count"
+alias grab.count="grep --count"

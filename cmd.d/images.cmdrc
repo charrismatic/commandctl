@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# =============================================================================
+#  images
+# =============================================================================
+# Shortcuts and macros for image coversion and optimization
+# -----------------------------------------------------------------------------
+
+alias img.png2jpg-dir="mogrify -format jpg -background white -flatten *.png "
+

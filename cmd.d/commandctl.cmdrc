@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# =============================================================================
+# - COMMANDCTL
+# =============================================================================
+# Aliases for the commandctl package
+# -----------------------------------------------------------------------------
+alias cmd="commandctl"
+alias cmd.edit="commandctl edit"
+alias cmd.goto="commandctl goto"
+alias cmd.help="commandctl help"
+alias cmd.info="commandctl info"
+alias cmd.list="commandctl list"
+alias cmd.modules="commandctl modules"
+alias cmd.reload="commandctl reload"
+alias cmd.search="commandctl search"
+alias cmd.show="commandctl show"
