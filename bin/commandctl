@@ -1,11 +1,17 @@
 #!/bin/bash
 
+# ==================================================
+# ____ ____ _  _ _  _ ____ __ _ ___  ____ ___ _
+# |___ [__] |\/| |\/| |--| | \| |__| |___  |  |___
+#
+# ==================================================
+
 # command [-pVv] command [arg ...]
-#   causes  a single word indicating the command or filename used to invoke command to be displayed;
-#    the -V option produces a more verbose description.
-#   If the -V or -v option is supplied, the exit status is 0 if command was found, and 1 if not.
-#   If neither option is supplied and an error occurred or command cannot be found, the exit status is 127.
-#   Otherwise, the exit status of the  command builtin is the exit status of command.
+# 	causes  a single word indicating the command or filename used to invoke command to be displayed;
+#   	the -V option produces a more verbose description.
+#   	If the -V or -v option is supplied, the exit status is 0 if command was found, and 1 if not.
+#   	If neither option is supplied and an error occurred or command cannot be found, the exit status is 127.
+#   	Otherwise, the exit status of the  command builtin is the exit status of command.
 
 
 _commandctl_help () {
