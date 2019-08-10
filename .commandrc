@@ -1,34 +1,26 @@
 #!/bin/bash
 
+# shellcheck disable=SC1090
 # =============================================================================
-#  MATT HARRIS m@ttHarr.is
+#  MATT HARRIS
+#  m@ttHarr.is
 #  6/15/2019, 12:55:21 PM
 # =============================================================================
-# shellcheck disable=SC1090
-
 export CMD_MOD_DIR=cmd.d
 export CMD_MOD_EXT=cmdrc
 export COMMANDCTL_INDEX=.commandrc
-export COMMANDCTL_PATH="$ZERO_SHELL/$CMD_MOD_DIR"
-export COMMANDCTL_INDEX_PATH="$ZERO_SHELL/$COMMANDCTL_INDEX"
+COMMANDCTL_DIR=commandctl
+export COMMANDCTL_BASE="$HOME"
+export COMMANDCTL_BASE="$HOME/lib/${COMMANDCTL_DIR}"
+export COMMANDCTL_PATH="${COMMANDCTL_BASE}/${CMD_MOD_DIR}"
+export COMMANDCTL_INDEX_PATH="${COMMANDCTL_BASE}/${COMMANDCTL_INDEX}"
 
-# =============================================================================
-# COMMANDCTL ALIASES
-# -----------------------------------------------------------------------------
-alias cmctl="commandctl"
-alias cmctl.list="commandctl list"
-alias cmctl.info="commandctl info"
-alias cmctl.help="commandctl help"
-alias cmctl.goto="commandctl goto"
-alias cmctl.show="commandctl show"
-alias cmctl.edit="commandctl edit"
-alias cmctl.search="commandctl search"
-alias cmctl.reload="commandctl reload"
 # =============================================================================
 # COMMAND MODULES
 # -----------------------------------------------------------------------------
 # @GROUP [UNIX CORE COMMANDS]
 # -----------------------------------------------------------------------------
+source $COMMANDCTL_PATH/commandctl.cmdrc
 source $COMMANDCTL_PATH/archives.cmdrc
 source $COMMANDCTL_PATH/less.cmdrc
 source $COMMANDCTL_PATH/list.cmdrc
@@ -39,6 +31,7 @@ source $COMMANDCTL_PATH/grep.cmdrc
 source $COMMANDCTL_PATH/system_query.cmdrc
 source $COMMANDCTL_PATH/format.cmdrc
 source $COMMANDCTL_PATH/unix.cmdrc
+
 # -----------------------------------------------------------------------------
 # @GROUP [SYSTEM ADMIN COMMANDS]
 # -----------------------------------------------------------------------------
@@ -48,14 +41,19 @@ source $COMMANDCTL_PATH/ps.cmdrc
 source $COMMANDCTL_PATH/safeguard.cmdrc
 source $COMMANDCTL_PATH/sytemctl.cmdrc
 source $COMMANDCTL_PATH/userctl.cmdrc
+
 # -----------------------------------------------------------------------------
 # @GROUP [DEVELOPER COMMANDS]
 # -----------------------------------------------------------------------------
+source $COMMANDCTL_PATH/build.cmdrc
 source $COMMANDCTL_PATH/git.cmdrc
 source $COMMANDCTL_PATH/task.cmdrc
 source $COMMANDCTL_PATH/mysql.cmdrc
 source $COMMANDCTL_PATH/vagrant.cmdrc
 source $COMMANDCTL_PATH/web.cmdrc
+source $COMMANDCTL_PATH/security.cmdrc
+source $COMMANDCTL_PATH/android.cmdrc
+source $COMMANDCTL_PATH/images.cmdrc
 # -----------------------------------------------------------------------------
 # @GROUP [LOCAL USER COMMANDS]
 # -----------------------------------------------------------------------------
@@ -67,6 +65,7 @@ source $COMMANDCTL_PATH/xsession_apps.cmdrc
 source $COMMANDCTL_PATH/colors.cmdrc
 source $COMMANDCTL_PATH/history.cmdrc
 source $COMMANDCTL_PATH/devnotes.cmdrc
+
 # @GROUP [SERVER / APPLICATION SPECIFIC COMMANDS]
 # -----------------------------------------------------------------------------
 #source $COMMANDCTL_PATH/ghost.cmdrc
@@ -80,3 +79,4 @@ source $COMMANDCTL_PATH/devnotes.cmdrc
 # -----------------------------------------------------------------------------
 # *NEW* DYNAMICALY GENEREATED
 # =============================================================================
+
