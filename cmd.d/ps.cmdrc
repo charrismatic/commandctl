@@ -63,3 +63,8 @@ alias ps.threads="ps Swm -O ppid,pmem,pcpu,majflt,rss,stat"
 alias ps.signal="ps Swm -o sig,sig_ignore,sig_block,sig_catch,pid,ppid,sess,pri,pmem,pcpu,majflt,rss,stat,command,flag "
 alias ps.ls="ps nwSfe -O ppid,pmem,pcpu,majflt,rss,stat"
 alias ps.lsc="ps nwSfe -O ppid,pmem,pcpu,majflt,rss,stat"
+
+
+# PSTREE
+
+alias pstree.extended="pstree -ahgGlstsZ"

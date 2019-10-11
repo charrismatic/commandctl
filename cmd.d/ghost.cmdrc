@@ -5,7 +5,7 @@
 # -----------------------------------
 # WEB APPLICATION CONFIGURATION MANAGEMENT AND PROVISIONING
 
-export GHOST_SERVICE_NAME=ghost_soyo-soy.service
+# export GHOST_SERVICE_NAME=ghost_soyo-soy.service
 
 ## GHOST
 alias gs.config.cat='cat /var/www/ghost/config.production.json'

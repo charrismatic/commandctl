@@ -7,47 +7,130 @@
 # /----------------------------------------------------------------------------
 # LIST
 # -----------------------------------------------------------------------------
-# - SH SHELL
-# - alias l="ls --color -h1pFAsog"
-alias l="ls -1 --size --color --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --sort=version --group-directories-first --ignore-backups --show-control-chars --indicator-style classify"
-alias ll="ls -l --color=always --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --almost-all --classify --sort=none -v"
-alias la="ls -alHFSh --group-directories-first --no-group --color"
-alias llt="ls -l --time-style=\"+%m-%d %H:%M\" --color=always --human-readable --no-group --almost-all --sort=time --time=ctime --reverse"
-alias lltr="ls -l --time-style=\"+%m-%d %H:%M\" --color=always --human-readable --no-group --almost-all --sort=time --time=ctime"
-alias llg="ls -l --color=always --group-directories-first --block-size=M --no-group --almost-all -v"
+alias ls="ls --color=always"
+
+# alias l="ls --color -h1pFAsog"
+# alias l="ls -1 --size --color --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --sort=version --group-directories-first --ignore-backups --show-control-chars --indicator-style classify"
+# alias ll="ls -l --color=always --human-readable --time-style=\"+%m-%d %H:%M\" --no-group --almost-all --classify --sort=none -v"
+# alias llt="ls -l --time-style=\"+%m-%d %H:%M\" --color=always --human-readable --no-group --almost-all --sort=time --time=ctime --reverse"
+# alias llg="ls -l --color=always --group-directories-first --block-size=M --no-group --almost-all -v"
+
+# lsd - stylizes ls command
+# https://github.com/Peltoche/lsd
+# --blocks default [permission,user,group,size,date,name]  [possible values: permission, user, group, size, date, name]
+alias l="lsd -1 --size short --color --icon=never --human-readable --group-dirs first --almost-all --classify --blocks=size,date,name --long --date relative --size short"
+alias ll="lsd -1 --size short --color --long --group-dirs first  --date relative --almost-all --classify --blocks=permission,user,size,date,name"
+alias lll="lsd --group-dirs first --almost-all --icon=never --classify --recursive --depth 3"
+alias lst="lsd --oneline --size short --color  --group-dirs first --almost-all --classify --blocks=permission,user,size,date,name --long --date relative --timesort --reverse"
+alias lsz="lsd --oneline --size default  --group-dirs first --almost-all --classify --blocks=date,size,name --long --date date --sizesort --reverse --total-size --human-readable"
+alias lsr="lsd --oneline --size default  --group-dirs first --almost-all --classify --blocks=date,size,name --long --date date --sizesort --reverse --total-size --human-readable --recursive"
+
+
+alias lstree="lsd --group-dirs first --almost-all --classify --human-readable  --tree --depth 3 --total-size  --blocks=permission,user,group,date,name,size --long  --date relative"
+alias lstwig="lsd --group-dirs first --almost-all --classify --human-readable  --tree --depth 2 --total-size  --blocks=permission,user,group,date,name,size --long  --date relative"
+#alias lstree="ls -R | grep \":$\" | sed -e \"s/:$//\" -e \"s/[^-][^\/]*\//--/g\" -e \"s/^/ /\" -e \"s/"
+
+alias ls.sizetree="lsd --group-dirs first --almost-all --classify   --tree --depth 2 --long --blocks=size,name --almost-all --size short --total-size"
+alias ls.deeptree="lsd --tree --depth 6 --almost-all --group-dirs none"
+
+
 # /----------------------------------------------------------------------------
 # SORT
+# Display values are in units of the first available SIZE from --block-size, and the DU_BLOCK_SIZE,  BLOCK_SIZE
+# and  BLOCKSIZE  environment  variables.  Otherwise, units default to 1024 bytes (or 512 if POSIXLY_CORRECT is
+# set). The SIZE argument is an integer and optional unit (example: 10K is 10*1024).  Units are K,M,G,T,P,E,Z,Y
+# (powers of 1024) or KB,MB,... (powers of 1000).
 # -----------------------------------------------------------------------------
+# alias sort.folders="find . -maxdepth 1 -type d -print | xargs du -sk | sort -rn"
 alias sort.size="ls -aFlss --block-size=k --no-group --time-style=+'%b%e %H:%M' --group-directories-first"
 alias sort.date="ls -aFhlrt --no-group --time-style=+'%b%e %H:%M' --group-directories-first"
-# alias sort.folders="find . -maxdepth 1 -type d -print | xargs du -sk | sort -rn"
-alias sort.folders="du -c -d 1 --block-size=M --threshold=1M | sort -rn"
-alias sort.folders-1="du -c -d 1 --block-size=M --threshold=1M | sort -rn"
-alias sort.folders-2="du -c -d 2 --block-size=M --threshold=1M | sort -rn"
-alias sort.folders-3="du -c -d 3 --block-size=M --threshold=1M | sort -rn"
-alias sort.extension="ls -atlrh --sort=size --block-size=M --no-group -g --group-directories-first --time-style=+'%e%b %H:%M\'"
+alias du.dirs="du --human-readable --total -d 3 --block-size=M --threshold=1M --separate-dirs | sort -rn"
+alias du.dirs1="du --human-readable --total -d 1 --block-size=M --threshold=1M | sort -rn"
+alias du.dirs2="du --human-readable --total -d 2 --block-size=M --threshold=1M | sort -rn"
+alias du.dirs3="du --human-readable --total -d 3 --block-size=M --threshold=1M | sort -rn"
+
+
 # /----------------------------------------------------------------------------
 # TREE
 # -----------------------------------------------------------------------------
-alias tree2="tree -Ch --sort=size  --dirsfirst -L 2"
-alias tree3="tree -Ch --sort=size  --dirsfirst -L 3"
-alias tree4="tree -Ch --sort=size  --dirsfirst -L 4"
-alias ltree="ls -R | grep \":$\" | sed -e \"s/:$//\" -e \"s/[^-][^\/]*\//--/g\" -e \"s/^/ /\" -e \"s/"
+alias tree="tree -Ch --dirsfirst"
+alias tree.d2="tree -Ch --sort=size  --dirsfirst -L 2"
+alias tree.d3="tree -Ch --sort=size  --dirsfirst -L 3"
+alias tree.d4="tree -Ch --sort=size  --dirsfirst -L 4"
 alias tree.size="find ./ -maxdepth 2 -type d -a -not -path \"*/node_modules/*\" -exec du --summarize --block-size=k {} \;"
 alias tree.size3="find ./ -maxdepth 3 -type d -a -not -path \"*/node_modules/*\" -exec du --summarize --block-size=k {} \;"
+
 # /----------------------------------------------------------------------------
 # FILESYSTEM: SPACE
 # -----------------------------------------------------------------------------
 alias df="df -ah --tota --block-size=M"
 alias diskspace="df -Th --block-size=M | sort -nr"
-alias folder_size="pwd; du -s --block-size=M;"
-alias folder_size_all="du -S --block-size=M | sort -nr | more;"
+alias foldersize="du -s --block-size=M;"
 
-slice() {
+slice () {
   SLICE_DEPTH="${1:-2}"
   SLICE_ARGS="${@:2}"
 
  find . -mindepth ${SLICE_DEPTH} -maxdepth ${SLICE_DEPTH} ${SLICE_ARGS}
+}
+
+
+# THIS IS A FREQUENT TYPO BUT THAT HAPPENS BECAUSE I OFTEN NEED TO SWITCH CONTEXTS
+# BETWEEN LIST FILES IN A FOLDER, DOES A FILE EXIST,
+# AND THEN READ THAT FILE WHICH WAS FOUND. IT MAKES SENSE TO COMBINE THEM INTO
+# A SINGLE COMMAND
+lcat () {
+  TARGET_PATH="${1:-'.'}"
+
+  [[ -f "${TARGET_PATH}" ]] \
+      && ls -alh "${TARGET_PATH}" \
+      && cat "${TARGET_PATH}"
+
+  [[ -d "${TARGET_PATH}" ]] && \
+    ls --format=long \
+      --color=always \
+      --human-readable \
+      --time-style="+%m-%d %H:%M" \
+      --no-group \
+      --group-directories-first \
+      --almost-all \
+      --size \
+      --show-control-chars \
+      --indicator-style=classify \
+        "$TARGET_PATH"
 
 }
 
+
+# THIS IS A FREQUENT TYPO BUT THAT HAPPENS BECAUSE I OFTEN NEED TO SWITCH CONTEXTS
+# BETWEEN LIST FILES IN A FOLDER, DOES A FOLDER EXIST, AND THEN READ THAT
+# MOVING TO THAT PATH WHICH WAS FOUND. IT MAKES SENSE TO COMBINE THEM INTO
+# A SINGLE COMMAND
+lcd () {
+  TARGET_PATH="${1:-'.'}"
+
+  ls --format=long \
+    --color=always \
+    --human-readable \
+    --time-style="+%m-%d %H:%M" \
+    --no-group \
+    --group-directories-first \
+    --almost-all \
+    --size \
+    --show-control-chars \
+    --indicator-style=classify \
+      "$TARGET_PATH"
+
+  [[ -f "${TARGET_PATH}" ]] && MOVE_DEST="$( dirname ${TARGET_PATH} )"
+
+  [[ -d "${TARGET_PATH}" ]] && MOVE_DEST="${TARGET_PATH}"
+
+  TARGET_CHILD_DIRS="$(find ${MOVE_DEST} -mindepth 1 -maxdepth 2 -type d  | wc -l)"
+
+  # AVOID MOVING UNNECESSARILY TO TERMINAL PATHS
+  if [ "${TARGET_CHILD_DIRS}" != "0" ]; then
+      echo "${MOVE_DEST}"
+      pushd "${MOVE_DEST}"
+  fi
+
+}

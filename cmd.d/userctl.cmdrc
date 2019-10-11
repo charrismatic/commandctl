@@ -2,7 +2,6 @@
 
 
 #  sa -  summarizes accounting information
-#
 #     [ -a | --list-all-names ]
 #               [ -b | --sort-sys-user-div-calls ]
 #               [ -c | --percentages ] [ -d | --sort-avio ]
@@ -23,28 +22,28 @@
 ## see:   getent nss nsswitch.conf
 # @alias ~/bin/lsusrs
 
-list_system_users () {
+_list_system_users () {
   # LIST USER TABLE
   echo -e "\n USERS \n"
   echo -e "USER:-:UID:GID:HOME:WORKINDIR:SHELL\n---:---:---:---:---:---:---\n" | cat - /etc/passwd | column -t -s :
 }
 
 
-list_sytem_groups () {
+_list_sytem_groups () {
   # LIST GROUP TABLE
   echo -e " \n GROUPS \n"
   echo -e "GROUP:-:GID:MEMBERS\n---:---:---:---\n" | cat - /etc/group | column -t -s :
 }
 
 
-list_sytsem_information () {
+_list_system_information () {
   echo -e "\n SYSTEM \n"
   echo -e "Hostname: $HOSTNAME \nDate: $(date)"
 }
 
-alias ls.users="list_system_users"
-alias ls.groups="list_sytem_groups"
-alias ls.system="list_sytsem_information"
+alias ls.users="_list_system_users"
+alias ls.groups="_list_sytem_groups"
+alias ls.system="_list_system_information"
 
 alias powerline-shell-edit-config="${EDITOR} $HOME/.config/powerline-shell/config.json"
 alias powerline-shell-get-config="printf \"%s \n\" $HOME/.config/powerline-shell/config.json"

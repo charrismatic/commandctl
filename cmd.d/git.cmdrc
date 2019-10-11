@@ -65,6 +65,7 @@ alias gs="git status"
 alias ga="git add"
 alias gm="git commit -m"
 
+alias gdiff="diff-so-fancy"
 alias git.status="git status"
 alias git.add="git add"
 alias git.clone="git clone"

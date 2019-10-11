@@ -13,8 +13,8 @@ _history_trim_timestamp () {
   sed -E 's/^\s[0-9]*\s+[0-9\.]*\s+//'
 }
 
-_history_last () {
-  LIST_COUNT=${1:-50}
+_history_lastn () {
+  LIST_COUNT="${1:-'50'}"
   history | tail -n $LIST_COUNT | _history_trim_timestamp;
 }
 
@@ -33,16 +33,15 @@ _history_backup () {
   HISTORY_BACKUP_FILE="${HISTORY_FILE_NAME}_history.${HISTORY_TIMESTAMP}"
 
   echo "Archiving command history... $HISTORY_BACKUP_FILE"
+  echo "${HISTORY_BACKUP_PATH}/${HISTORY_FILE_NAME}.${HISTORY_TIMESTAMP}"
 
   history -a
   history -w
-
-  history \
+  history -n
+  history -r \
     | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' \
     | uniq \
     > "${HISTORY_BACKUP_PATH}/${HISTORY_FILE_NAME}.${HISTORY_TIMESTAMP}"
-
-  history -c && history -w
 
   echo "done" \;
 }
@@ -64,3 +63,5 @@ alias hist.list.10="_history_last 10"
 alias hist.list.100="_history_last 100"
 alias hist.unique="_history_unique"
 alias hist.backup="_history_backup"
+alias hist.clean="rm $HOME/.bash_history && touch $HOME/.bash_history && history -c"
+

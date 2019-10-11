@@ -30,7 +30,7 @@ alias chmod="chmod --changes --preserve-root"
 # FILESYSTEM: CHANGES
 # -----------------------------------------------------------------------------
 alias diffy="diff --width=$COLUMNS --color=always --ignore-all-space --ignore-blank-lines --side-by-side --suppress-common-lines --recursive --exclude=*.git/*"
-alias fdiff="rsync -ric --dry-run"
+alias fdiff="rsync -ric --stats --dry-run"
 
 #ls --block-size=KB   --classify --literal --group-directories-first --almost-all --color=always --numeric-uid-gid --recursive --show-control-chars --literal -v --time-style=iso --no-group
 
@@ -57,15 +57,19 @@ function apt_grep () {
   apt-cache search $SEEK | sort | grep -v $IGNORE  | grep --color $SEEK
 }
 
-
-alias apt.i="sudo apt-get install"
+alias apt.i="sudo apt-get install --show-progress"
 alias apt.u="sudo apt-get update && apt-get upgrade -y"
-alias apt.install="sudo apt-get install"
+alias apt.install="sudo apt-get install --show-progress"
+
+alias apt.ls.updates="apt list --upgradable"
+alias apt.ls.versions="apt list --all-versions"
+alias apt.ls.installed="apt list --installed"
+
 alias apt.update="sudo apt-get update"
 alias apt.upgrade="sudo apt-get upgrade"
-
 alias apt.show="apt show"
 alias apt.search="apt_grep"
+
 alias search="apt_grep"
 alias aptgrep="apt_grep"
 
